@@ -1,7 +1,5 @@
 # When Does Aggregating Explanations Work?
 
-## A Rank-Aggregation Analysis of Patch-Based Saliency Maps
-
 Jinhua Xu, Davide Anguita, Fabio Roli, Jing Yuan, and Luca Oneto
 
 ## Abstract
