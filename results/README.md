@@ -1,6 +1,8 @@
 # Results
 
-Published result reports are distributed as PDF files in `pdf/`. The LaTeX
-source for each report is kept in the corresponding directory under `latex/`.
+Dataset-level result reports are distributed in [`pdf/by-dataset/`](pdf/by-dataset/).
+The directly compilable source for each report is kept in the matching
+directory under [`latex/by-dataset/`](latex/by-dataset/).
 
-Large intermediate experiment artifacts are not part of this repository.
+The standalone [`naive.pdf`](pdf/naive.pdf) report contains the paper NAIVE
+tables and ablations, with its source in [`latex/naive/`](latex/naive/).

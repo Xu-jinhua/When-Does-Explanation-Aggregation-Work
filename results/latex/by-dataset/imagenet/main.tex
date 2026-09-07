@@ -1,0 +1,43 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{amsmath,amssymb,array,booktabs,caption,graphicx,pdflscape}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\captionsetup{hypcap=false}
+
+\title{When Does Aggregating Explanations Work?\\\large ImageNet Results}
+\author{Jinhua Xu, Davide Anguita, Fabio Roli, Jing Yuan, and Luca Oneto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This report consolidates the released \texttt{ImageNet} experiment results.
+Tables are grouped by model, experimental protocol, and aggregation setting.
+Metric directions and robustness definitions are stated in every table header
+and caption.
+
+\vspace{1em}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Protocol & Model & Settings \\
+\midrule
+Paper protocol & ResNet-18 & NAIVE, IND, NOISE-S, NOISE-K \\
+Paper protocol & ViT-B/16 & NAIVE, IND, NOISE-S, NOISE-K \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vfill
+\noindent\small
+Result source snapshot: \texttt{d6e4b9bbfb3c} from
+\href{https://github.com/Xu-jinhua/Workshop-When-Does-Explanations/tree/d6e4b9bbfb3c992ddd8eb7ec728e7b3cad85692f}{Workshop-When-Does-Explanations}.
+
+\input{tables.tex}
+
+\end{document}

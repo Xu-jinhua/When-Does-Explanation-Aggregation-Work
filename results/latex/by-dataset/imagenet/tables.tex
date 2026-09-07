@@ -1,0 +1,234 @@
+% Tables generated from the released structured result summaries.
+% Values are rounded to three decimal places for presentation.
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NAIVE results for \texttt{ImageNet} with \texttt{ResNet-18} (Paper protocol). The methods are the best individual explanation, Simple Averaging, Borda, Kemeny--Young, RRF, and Schulze. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized. The test split contains $n=5000$ samples.}
+\label{tab:paper:resnet18:naive}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13} \cmidrule(lr){14-17} \cmidrule(lr){18-21}
+ & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Best Individual & 0.172 & 0.175 & 0.292 & 0.295 & 0.078 & 0.011 & 0.234 & 0.184 & 0.044 & 0.009 & 0.204 & 0.185 & 0.024 & 0.000 & 0.064 & 0.047 & 0.036 & 0.003 & 0.105 & 0.002 \\
+Simple Averaging & 0.173 & 0.251 & 0.286 & 0.386 & 0.156 & 0.112 & 0.347 & 0.321 & 0.138 & 0.092 & 0.315 & 0.295 & 0.073 & 0.064 & 0.119 & 0.120 & 0.094 & 0.034 & 0.177 & 0.075 \\
+Borda & 0.158 & 0.219 & 0.276 & 0.346 & 0.169 & 0.100 & 0.338 & 0.321 & 0.162 & 0.079 & 0.321 & 0.282 & 0.075 & 0.043 & 0.114 & 0.103 & 0.095 & 0.019 & 0.188 & 0.053 \\
+Kemeny--Young & 0.156 & 0.223 & 0.271 & 0.349 & 0.167 & 0.068 & 0.330 & 0.277 & 0.161 & 0.045 & 0.317 & 0.252 & 0.075 & 0.036 & 0.114 & 0.099 & 0.090 & 0.015 & 0.179 & 0.049 \\
+RRF & 0.161 & 0.218 & 0.281 & 0.342 & 0.165 & 0.078 & 0.329 & 0.294 & 0.162 & 0.066 & 0.313 & 0.265 & 0.074 & 0.034 & 0.113 & 0.096 & 0.096 & 0.025 & 0.191 & 0.061 \\
+Schulze & 0.158 & 0.218 & 0.276 & 0.344 & 0.166 & 0.076 & 0.330 & 0.288 & 0.159 & 0.066 & 0.312 & 0.270 & 0.077 & 0.035 & 0.112 & 0.096 & 0.093 & 0.017 & 0.186 & 0.051 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{IND results for \texttt{ImageNet} with \texttt{ResNet-18} (Paper protocol). The Best Individual row is followed by matched NAIVE and IND results for each aggregation method at $q=11$. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized. The test split contains $n=5000$ samples.}
+\label{tab:paper:resnet18:ind}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & Setting & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Best Individual & baseline & 0.044 & 0.427 & 0.125 & 0.569 & 0.066 & 0.074 & 0.238 & 0.282 & 0.049 & 0.072 & 0.218 & 0.267 & 0.025 & 0.077 & 0.070 & 0.132 & 0.036 & 0.006 & 0.109 & 0.018 \\
+\addlinespace[0.25em]
+Simple Averaging & matched NAIVE & 0.027 & 0.641 & 0.096 & 0.795 & 0.077 & 0.068 & 0.260 & 0.137 & 0.059 & 0.067 & 0.230 & 0.126 & 0.023 & 0.000 & 0.073 & 0.054 & 0.024 & 0.002 & 0.089 & 0.001 \\
+Simple Averaging & IND & 0.022 & 0.630 & 0.091 & 0.782 & 0.080 & 0.064 & 0.256 & 0.144 & 0.058 & 0.058 & 0.232 & 0.139 & 0.027 & 0.001 & 0.077 & 0.058 & 0.019 & 0.001 & 0.084 & 0.000 \\
+\addlinespace[0.25em]
+Borda & matched NAIVE & 0.031 & 0.622 & 0.101 & 0.776 & 0.072 & 0.047 & 0.256 & 0.160 & 0.055 & 0.041 & 0.226 & 0.152 & 0.026 & 0.013 & 0.075 & 0.070 & 0.028 & 0.001 & 0.093 & 0.001 \\
+Borda & IND & 0.029 & 0.629 & 0.105 & 0.782 & 0.077 & 0.050 & 0.251 & 0.158 & 0.047 & 0.042 & 0.218 & 0.155 & 0.025 & 0.013 & 0.070 & 0.069 & 0.026 & 0.001 & 0.099 & 0.001 \\
+\addlinespace[0.25em]
+Kemeny--Young & matched NAIVE & 0.029 & 0.623 & 0.097 & 0.776 & 0.063 & 0.048 & 0.243 & 0.159 & 0.047 & 0.040 & 0.218 & 0.153 & 0.020 & 0.011 & 0.066 & 0.068 & 0.026 & 0.003 & 0.090 & 0.004 \\
+Kemeny--Young & IND & 0.030 & 0.620 & 0.100 & 0.776 & 0.066 & 0.041 & 0.247 & 0.163 & 0.047 & 0.037 & 0.214 & 0.159 & 0.022 & 0.017 & 0.066 & 0.071 & 0.027 & 0.001 & 0.093 & 0.003 \\
+\addlinespace[0.25em]
+RRF & matched NAIVE & 0.031 & 0.624 & 0.101 & 0.778 & 0.068 & 0.048 & 0.246 & 0.159 & 0.046 & 0.043 & 0.219 & 0.150 & 0.021 & 0.012 & 0.068 & 0.068 & 0.029 & 0.000 & 0.095 & 0.002 \\
+RRF & IND & 0.031 & 0.625 & 0.103 & 0.780 & 0.066 & 0.045 & 0.242 & 0.162 & 0.043 & 0.041 & 0.213 & 0.157 & 0.021 & 0.016 & 0.062 & 0.072 & 0.028 & 0.004 & 0.096 & 0.006 \\
+\addlinespace[0.25em]
+Schulze & matched NAIVE & 0.030 & 0.622 & 0.098 & 0.776 & 0.064 & 0.046 & 0.245 & 0.160 & 0.047 & 0.039 & 0.219 & 0.153 & 0.020 & 0.012 & 0.068 & 0.069 & 0.027 & 0.000 & 0.091 & 0.002 \\
+Schulze & IND & 0.030 & 0.628 & 0.100 & 0.781 & 0.069 & 0.049 & 0.248 & 0.161 & 0.049 & 0.044 & 0.219 & 0.154 & 0.022 & 0.012 & 0.068 & 0.071 & 0.027 & 0.004 & 0.094 & 0.007 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NOISE-S results for \texttt{ImageNet} with \texttt{ResNet-18} (Paper protocol), using the Spearman-based rank-noise geometry. The $q$ column gives the selected explanation-prefix length. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized.}
+\label{tab:paper:resnet18:noise-s}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & $q$ & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Simple Averaging & $4$ & 0.180 & 0.238 & 0.302 & 0.371 & 0.153 & 0.118 & 0.337 & 0.328 & 0.139 & 0.103 & 0.309 & 0.310 & 0.080 & 0.069 & 0.121 & 0.123 & 0.097 & 0.034 & 0.188 & 0.079 \\
+Borda & $4$ & 0.186 & 0.180 & 0.312 & 0.302 & 0.172 & 0.113 & 0.334 & 0.326 & 0.161 & 0.093 & 0.317 & 0.300 & 0.080 & 0.040 & 0.118 & 0.102 & 0.110 & 0.030 & 0.206 & 0.071 \\
+Kemeny--Young & $4$ & 0.175 & 0.165 & 0.298 & 0.277 & 0.171 & 0.086 & 0.329 & 0.309 & 0.161 & 0.061 & 0.311 & 0.276 & 0.081 & 0.035 & 0.114 & 0.102 & 0.107 & 0.009 & 0.205 & 0.040 \\
+RRF & $4$ & 0.183 & 0.161 & 0.307 & 0.275 & 0.176 & 0.098 & 0.333 & 0.320 & 0.165 & 0.072 & 0.320 & 0.284 & 0.083 & 0.039 & 0.119 & 0.102 & 0.110 & 0.026 & 0.205 & 0.064 \\
+Schulze & $4$ & 0.170 & 0.173 & 0.297 & 0.287 & 0.176 & 0.082 & 0.324 & 0.300 & 0.169 & 0.051 & 0.318 & 0.267 & 0.088 & 0.028 & 0.116 & 0.092 & 0.105 & 0.014 & 0.206 & 0.051 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NOISE-K results for \texttt{ImageNet} with \texttt{ResNet-18} (Paper protocol), using the Kendall-based rank-noise geometry. The $q$ column gives the selected explanation-prefix length. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized.}
+\label{tab:paper:resnet18:noise-k}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & $q$ & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Simple Averaging & $5$ & 0.173 & 0.270 & 0.287 & 0.400 & 0.156 & 0.126 & 0.347 & 0.343 & 0.129 & 0.107 & 0.309 & 0.317 & 0.072 & 0.067 & 0.119 & 0.130 & 0.091 & 0.043 & 0.173 & 0.078 \\
+Borda & $5$ & 0.188 & 0.198 & 0.312 & 0.322 & 0.168 & 0.130 & 0.341 & 0.350 & 0.150 & 0.111 & 0.313 & 0.319 & 0.076 & 0.051 & 0.114 & 0.114 & 0.111 & 0.026 & 0.203 & 0.072 \\
+Kemeny--Young & $5$ & 0.187 & 0.166 & 0.313 & 0.287 & 0.170 & 0.096 & 0.332 & 0.306 & 0.163 & 0.068 & 0.316 & 0.277 & 0.085 & 0.045 & 0.120 & 0.103 & 0.111 & 0.027 & 0.205 & 0.075 \\
+RRF & $5$ & 0.189 & 0.187 & 0.315 & 0.309 & 0.165 & 0.114 & 0.335 & 0.332 & 0.157 & 0.097 & 0.315 & 0.307 & 0.082 & 0.047 & 0.115 & 0.108 & 0.110 & 0.032 & 0.205 & 0.075 \\
+Schulze & $5$ & 0.188 & 0.202 & 0.312 & 0.326 & 0.169 & 0.118 & 0.337 & 0.334 & 0.158 & 0.100 & 0.321 & 0.307 & 0.079 & 0.049 & 0.115 & 0.111 & 0.109 & 0.035 & 0.202 & 0.080 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NAIVE results for \texttt{ImageNet} with \texttt{ViT-B/16} (Paper protocol). The methods are the best individual explanation, Simple Averaging, Borda, Kemeny--Young, RRF, and Schulze. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized. The test split contains $n=5000$ samples.}
+\label{tab:paper:vitb16:naive}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13} \cmidrule(lr){14-17} \cmidrule(lr){18-21}
+ & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Best Individual & 0.084 & 0.095 & 0.134 & 0.143 & 0.011 & 0.107 & 0.026 & 0.133 & 0.006 & 0.074 & 0.023 & 0.104 & 0.002 & 0.013 & 0.008 & 0.020 & 0.022 & 0.076 & 0.033 & 0.077 \\
+Simple Averaging & 0.064 & 0.117 & 0.103 & 0.174 & 0.077 & 0.249 & 0.110 & 0.291 & 0.067 & 0.181 & 0.096 & 0.221 & 0.024 & 0.066 & 0.032 & 0.081 & 0.063 & 0.270 & 0.079 & 0.285 \\
+Borda & 0.048 & 0.226 & 0.080 & 0.287 & 0.079 & 0.183 & 0.113 & 0.223 & 0.069 & 0.123 & 0.101 & 0.162 & 0.027 & 0.040 & 0.037 & 0.054 & 0.074 & 0.244 & 0.095 & 0.256 \\
+Kemeny--Young & 0.050 & 0.268 & 0.086 & 0.332 & 0.085 & 0.161 & 0.117 & 0.199 & 0.076 & 0.110 & 0.104 & 0.146 & 0.032 & 0.038 & 0.040 & 0.048 & 0.071 & 0.211 & 0.093 & 0.217 \\
+RRF & 0.054 & 0.217 & 0.089 & 0.280 & 0.083 & 0.191 & 0.118 & 0.230 & 0.074 & 0.132 & 0.104 & 0.172 & 0.031 & 0.052 & 0.040 & 0.066 & 0.070 & 0.238 & 0.089 & 0.243 \\
+Schulze & 0.049 & 0.234 & 0.085 & 0.297 & 0.086 & 0.172 & 0.119 & 0.211 & 0.076 & 0.122 & 0.102 & 0.159 & 0.034 & 0.047 & 0.041 & 0.056 & 0.072 & 0.236 & 0.090 & 0.242 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{IND results for \texttt{ImageNet} with \texttt{ViT-B/16} (Paper protocol). The Best Individual row is followed by matched NAIVE and IND results for each aggregation method at $q=11$. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized. The test split contains $n=5000$ samples.}
+\label{tab:paper:vitb16:ind}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & Setting & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Best Individual & baseline & 0.018 & 0.240 & 0.038 & 0.308 & 0.025 & 0.269 & 0.040 & 0.308 & 0.015 & 0.232 & 0.034 & 0.267 & 0.008 & 0.099 & 0.012 & 0.107 & 0.044 & 0.104 & 0.054 & 0.108 \\
+\addlinespace[0.25em]
+Simple Averaging & matched NAIVE & 0.012 & 0.290 & 0.029 & 0.359 & 0.020 & 0.298 & 0.041 & 0.336 & 0.009 & 0.256 & 0.031 & 0.293 & 0.007 & 0.115 & 0.015 & 0.126 & 0.042 & 0.102 & 0.054 & 0.107 \\
+Simple Averaging & IND & 0.016 & 0.303 & 0.036 & 0.370 & 0.019 & 0.294 & 0.035 & 0.332 & 0.009 & 0.250 & 0.027 & 0.291 & 0.007 & 0.100 & 0.012 & 0.116 & 0.041 & 0.100 & 0.051 & 0.107 \\
+\addlinespace[0.25em]
+Borda & matched NAIVE & 0.016 & 0.263 & 0.033 & 0.329 & 0.021 & 0.289 & 0.042 & 0.330 & 0.012 & 0.250 & 0.034 & 0.290 & 0.008 & 0.108 & 0.017 & 0.121 & 0.042 & 0.097 & 0.054 & 0.104 \\
+Borda & IND & 0.017 & 0.280 & 0.038 & 0.349 & 0.022 & 0.285 & 0.041 & 0.324 & 0.013 & 0.249 & 0.036 & 0.287 & 0.009 & 0.100 & 0.014 & 0.109 & 0.045 & 0.103 & 0.053 & 0.111 \\
+\addlinespace[0.25em]
+Kemeny--Young & matched NAIVE & 0.018 & 0.253 & 0.038 & 0.320 & 0.024 & 0.283 & 0.047 & 0.322 & 0.012 & 0.244 & 0.037 & 0.283 & 0.008 & 0.104 & 0.017 & 0.114 & 0.044 & 0.097 & 0.056 & 0.101 \\
+Kemeny--Young & IND & 0.019 & 0.269 & 0.039 & 0.340 & 0.027 & 0.283 & 0.051 & 0.319 & 0.014 & 0.247 & 0.039 & 0.284 & 0.011 & 0.100 & 0.019 & 0.103 & 0.047 & 0.100 & 0.060 & 0.106 \\
+\addlinespace[0.25em]
+RRF & matched NAIVE & 0.017 & 0.255 & 0.035 & 0.322 & 0.026 & 0.285 & 0.048 & 0.326 & 0.015 & 0.243 & 0.039 & 0.283 & 0.009 & 0.105 & 0.019 & 0.115 & 0.044 & 0.098 & 0.057 & 0.105 \\
+RRF & IND & 0.018 & 0.272 & 0.037 & 0.338 & 0.027 & 0.289 & 0.052 & 0.331 & 0.018 & 0.244 & 0.041 & 0.284 & 0.013 & 0.100 & 0.020 & 0.110 & 0.048 & 0.105 & 0.058 & 0.112 \\
+\addlinespace[0.25em]
+Schulze & matched NAIVE & 0.019 & 0.256 & 0.036 & 0.323 & 0.022 & 0.285 & 0.046 & 0.325 & 0.011 & 0.247 & 0.038 & 0.286 & 0.008 & 0.104 & 0.018 & 0.114 & 0.042 & 0.096 & 0.055 & 0.101 \\
+Schulze & IND & 0.018 & 0.273 & 0.036 & 0.342 & 0.025 & 0.291 & 0.047 & 0.329 & 0.015 & 0.250 & 0.042 & 0.289 & 0.012 & 0.099 & 0.019 & 0.109 & 0.046 & 0.103 & 0.056 & 0.109 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NOISE-S results for \texttt{ImageNet} with \texttt{ViT-B/16} (Paper protocol), using the Spearman-based rank-noise geometry. The $q$ column gives the selected explanation-prefix length. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized.}
+\label{tab:paper:vitb16:noise-s}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & $q$ & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Simple Averaging & $2$ & 0.085 & 0.097 & 0.132 & 0.148 & 0.067 & 0.220 & 0.083 & 0.272 & 0.055 & 0.171 & 0.071 & 0.219 & 0.023 & 0.064 & 0.021 & 0.082 & 0.077 & 0.198 & 0.093 & 0.205 \\
+Borda & $2$ & 0.086 & 0.093 & 0.135 & 0.146 & 0.073 & 0.223 & 0.085 & 0.272 & 0.054 & 0.168 & 0.068 & 0.214 & 0.029 & 0.062 & 0.025 & 0.081 & 0.076 & 0.203 & 0.091 & 0.210 \\
+Kemeny--Young & $2$ & 0.086 & 0.093 & 0.135 & 0.146 & 0.073 & 0.223 & 0.085 & 0.272 & 0.054 & 0.168 & 0.068 & 0.214 & 0.029 & 0.062 & 0.025 & 0.081 & 0.076 & 0.203 & 0.091 & 0.210 \\
+RRF & $2$ & 0.087 & 0.092 & 0.136 & 0.144 & 0.074 & 0.225 & 0.086 & 0.274 & 0.053 & 0.169 & 0.068 & 0.216 & 0.026 & 0.064 & 0.022 & 0.083 & 0.076 & 0.204 & 0.090 & 0.210 \\
+Schulze & $2$ & 0.086 & 0.093 & 0.135 & 0.146 & 0.073 & 0.223 & 0.085 & 0.272 & 0.054 & 0.168 & 0.068 & 0.214 & 0.029 & 0.062 & 0.025 & 0.081 & 0.076 & 0.203 & 0.091 & 0.210 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{center}
+\captionof{table}{NOISE-K results for \texttt{ImageNet} with \texttt{ViT-B/16} (Paper protocol), using the Kendall-based rank-noise geometry. The $q$ column gives the selected explanation-prefix length. All metrics use $p=16$, $k=20$, dataset-mean filling, $\sigma_{\mathtt{g}}=0.15$, $\pi_{\mathtt{p}}=0.05$, $\sigma_{\mathtt{s}}=0.15$, and $\epsilon=2/255$. Robustness is the absolute quality change under perturbation; lower values are better and all $\mathtt{R}$ columns are minimized.}
+\label{tab:paper:vitb16:noise-k}
+\vspace{0.35em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{2.2pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrrrrrrrrrrrrrr@{}}
+\toprule
+Method & $q$ & \multicolumn{4}{c}{Clean quality} & \multicolumn{4}{c}{Gaussian ($g$)} & \multicolumn{4}{c}{Salt-and-pepper ($p$)} & \multicolumn{4}{c}{Speckle ($s$)} & \multicolumn{4}{c}{Adversarial ($a$)} \\
+\cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14} \cmidrule(lr){15-18} \cmidrule(lr){19-22}
+ &  & $\mathtt{F}\uparrow$ & $\bar{\mathtt{F}}\downarrow$ & $\mathtt{C}\uparrow$ & $\bar{\mathtt{C}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{g}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{p}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{s}}\downarrow$ & $\mathtt{R}_{\mathtt{F}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{F}}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\mathtt{C}}^{\mathtt{a}}\downarrow$ & $\mathtt{R}_{\bar{\mathtt{C}}}^{\mathtt{a}}\downarrow$ \\
+\midrule
+Simple Averaging & $3$ & 0.073 & 0.097 & 0.120 & 0.148 & 0.083 & 0.232 & 0.108 & 0.280 & 0.068 & 0.174 & 0.094 & 0.220 & 0.031 & 0.057 & 0.032 & 0.076 & 0.075 & 0.199 & 0.093 & 0.204 \\
+Borda & $3$ & 0.051 & 0.103 & 0.096 & 0.151 & 0.080 & 0.252 & 0.102 & 0.303 & 0.064 & 0.187 & 0.090 & 0.235 & 0.024 & 0.067 & 0.024 & 0.089 & 0.102 & 0.191 & 0.121 & 0.201 \\
+Kemeny--Young & $3$ & 0.087 & 0.095 & 0.136 & 0.146 & 0.072 & 0.220 & 0.091 & 0.271 & 0.058 & 0.168 & 0.079 & 0.214 & 0.027 & 0.059 & 0.027 & 0.077 & 0.077 & 0.207 & 0.093 & 0.216 \\
+RRF & $3$ & 0.073 & 0.096 & 0.123 & 0.147 & 0.082 & 0.224 & 0.103 & 0.273 & 0.068 & 0.156 & 0.086 & 0.205 & 0.031 & 0.049 & 0.028 & 0.071 & 0.086 & 0.202 & 0.102 & 0.206 \\
+Schulze & $3$ & 0.076 & 0.098 & 0.125 & 0.148 & 0.074 & 0.236 & 0.096 & 0.286 & 0.062 & 0.175 & 0.083 & 0.224 & 0.023 & 0.061 & 0.023 & 0.079 & 0.079 & 0.191 & 0.097 & 0.199 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{landscape}

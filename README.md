@@ -22,15 +22,16 @@ distance-based rank-noise model.
 
 ## Results
 
-The experimental results are organized by the three settings used in the
-paper. Each report is distributed as a reader-friendly PDF together with the
-LaTeX source used to produce it.
+The experimental results are organized as dataset-level reports. Each report
+collects the available model and aggregation-setting results for one dataset
+and is distributed as a reader-friendly PDF together with its LaTeX source.
 
-| Setting | PDF report | LaTeX source |
-|:--|:--|:--|
-| NAIVE | [naive.pdf](results/pdf/naive.pdf) | [source](results/latex/naive/) |
-| IND | [ind.pdf](results/pdf/ind.pdf) | [source](results/latex/ind/) |
-| NOISE | [noise.pdf](results/pdf/noise.pdf) | [source](results/latex/noise/) |
+- [Dataset reports](results/pdf/by-dataset/)
+- [Dataset-report LaTeX sources](results/latex/by-dataset/)
+- [Paper NAIVE results and ablations](results/pdf/naive.pdf)
+
+The detailed dataset-model coverage index is provided in
+[`results/README.md`](results/README.md).
 
 ## Repository layout
 
