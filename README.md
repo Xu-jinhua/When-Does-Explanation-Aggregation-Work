@@ -23,15 +23,26 @@ distance-based rank-noise model.
 ## Results
 
 The experimental results are organized as dataset-level reports. Each report
-collects the available model and aggregation-setting results for one dataset
+collects the released model and aggregation-setting results for one dataset
 and is distributed as a reader-friendly PDF together with its LaTeX source.
 
-- [Dataset reports](results/pdf/by-dataset/)
-- [Dataset-report LaTeX sources](results/latex/by-dataset/)
-- [Paper NAIVE results and ablations](results/pdf/naive.pdf)
+| Dataset | Models | PDF report | LaTeX source |
+|:--|:--|:--|:--|
+| ImageNet | ResNet-18, ViT-B/16 | [imagenet.pdf](results/pdf/by-dataset/imagenet.pdf) | [source](results/latex/by-dataset/imagenet/) |
+| DermaMNIST | ResNet-18, ViT-B/16 | [dermamnist.pdf](results/pdf/by-dataset/dermamnist.pdf) | [source](results/latex/by-dataset/dermamnist/) |
+| PathMNIST | DenseNet-121, ViT-B/16 | [pathmnist.pdf](results/pdf/by-dataset/pathmnist.pdf) | [source](results/latex/by-dataset/pathmnist/) |
+| BloodMNIST | ViT-B/16 | [bloodmnist.pdf](results/pdf/by-dataset/bloodmnist.pdf) | [source](results/latex/by-dataset/bloodmnist/) |
+| BreastMNIST | ViT-B/16 | [breastmnist.pdf](results/pdf/by-dataset/breastmnist.pdf) | [source](results/latex/by-dataset/breastmnist/) |
+| OctMNIST | ViT-B/16 | [octmnist.pdf](results/pdf/by-dataset/octmnist.pdf) | [source](results/latex/by-dataset/octmnist/) |
+| OrganCMNIST | ViT-B/16 | [organcmnist.pdf](results/pdf/by-dataset/organcmnist.pdf) | [source](results/latex/by-dataset/organcmnist/) |
+| OrganSMNIST | ViT-B/16 | [organsmnist.pdf](results/pdf/by-dataset/organsmnist.pdf) | [source](results/latex/by-dataset/organsmnist/) |
+| PneumoniaMNIST | ViT-B/16 | [pneumoniamnist.pdf](results/pdf/by-dataset/pneumoniamnist.pdf) | [source](results/latex/by-dataset/pneumoniamnist/) |
+| RetinaMNIST | ViT-B/16 | [retinamnist.pdf](results/pdf/by-dataset/retinamnist.pdf) | [source](results/latex/by-dataset/retinamnist/) |
 
-The detailed dataset-model coverage index is provided in
-[`results/README.md`](results/README.md).
+The reports contain 54 tables covering 10 datasets and 13 distinct
+dataset-model combinations. The detailed model, protocol, and setting coverage
+is provided in [`results/README.md`](results/README.md). The standalone
+[paper NAIVE report](results/pdf/naive.pdf) also includes the paper ablations.
 
 ## Repository layout
 
