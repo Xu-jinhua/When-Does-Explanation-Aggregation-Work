@@ -1,4 +1,3 @@
 # Documentation
 
-Reserved for supplementary documentation, release notes, and report-specific
-provenance.
+Supplementary documentation and report-specific provenance.

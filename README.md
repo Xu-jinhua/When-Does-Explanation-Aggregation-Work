@@ -1,12 +1,38 @@
-# When Does Explanation Aggregation Work?
+# When Does Aggregating Explanations Work?
 
-Official result repository for the paper *When Does Explanation Aggregation
-Work?*
+## A Rank-Aggregation Analysis of Patch-Based Saliency Maps
 
-The repository is being released in stages. The first stage publishes
-reader-friendly result reports as compiled PDF files together with the LaTeX
-sources used to produce them. The experiment implementation will be added to
-the reserved `code/`, `configs/`, and `scripts/` locations later.
+Jinhua Xu, Davide Anguita, Fabio Roli, Jing Yuan, and Luca Oneto
+
+## Abstract
+
+Post-hoc explanation methods for image classifiers often produce inconsistent
+results, particularly under data perturbations, model variations, or when
+different explanation techniques are applied. Ensembling multiple explanations
+has therefore emerged as a common strategy to mitigate such disagreement.
+However, existing approaches remain largely empirical and offer limited
+theoretical insight into the conditions under which ensemble methods improve
+reliability or, conversely, fail. In this paper, we study the aggregation of
+image explanations derived from patch-based saliency maps. We first rank image
+patches according to their estimated importance and then combine these rankings
+using different rank-aggregation strategies. Through experiments on multiple
+datasets, model architectures, post-hoc explanation methods, and
+rank-aggregation strategies, we show that the effectiveness of aggregation
+methods depends on how well two assumptions are met: independence among the
+aggregated explanations and compatibility of the explanation noise with a
+distance-based rank-noise model.
+
+## Results
+
+The experimental results are organized by the three settings used in the
+paper. Each report is distributed as a reader-friendly PDF together with the
+LaTeX source used to produce it.
+
+| Setting | PDF report | LaTeX source |
+|:--|:--|:--|
+| NAIVE | [naive.pdf](results/pdf/naive.pdf) | [source](results/latex/naive/) |
+| IND | [ind.pdf](results/pdf/ind.pdf) | [source](results/latex/ind/) |
+| NOISE | [noise.pdf](results/pdf/noise.pdf) | [source](results/latex/noise/) |
 
 ## Repository layout
 
@@ -15,34 +41,21 @@ the reserved `code/`, `configs/`, and `scripts/` locations later.
 ├── results/
 │   ├── pdf/                 # Published result reports
 │   ├── latex/               # LaTeX sources for the published PDFs
-│   ├── processed/           # Future machine-readable summaries
-│   ├── raw/                 # Reserved for documented raw exports
-│   └── tables/              # Future CSV/LaTeX table exports
-├── code/                    # Reserved for the reproducible implementation
-├── configs/                 # Reserved for experiment configurations
-├── scripts/                 # Reserved for table and figure-generation tools
-├── figures/                 # Reserved for released figures
-└── docs/                    # Release notes and supplementary documentation
+│   ├── processed/           # Processed result summaries
+│   ├── raw/                 # Documented raw result exports
+│   └── tables/              # Machine-readable and LaTeX table exports
+├── code/                    # Experiment implementation
+├── configs/                 # Experiment configurations
+├── scripts/                 # Result and report-generation utilities
+├── figures/                 # Figures organized by experimental setting
+└── docs/                    # Supplementary documentation
 ```
 
-## Published reports
+## Building the reports
 
-Reports are grouped by the experimental setting used in the paper:
+Run `latexmk` from a report's source directory. For example:
 
-- `results/pdf/naive.pdf`
-- `results/pdf/ind.pdf`
-- `results/pdf/noise.pdf`
-
-Each report will have a matching source directory under `results/latex/`.
-The tables retain their experimental parameters, metric directions, and
-dataset/model labels in the table headers and captions.
-
-## Release status
-
-The repository structure is established first. Result PDFs and their LaTeX
-sources will be added one report at a time. Code and configuration files are
-reserved for a later release.
-
-## Citation
-
-Citation information will be added when the paper metadata is finalized.
+```bash
+cd results/latex/naive
+latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
+```

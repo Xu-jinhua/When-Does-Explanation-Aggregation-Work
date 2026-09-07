@@ -1,3 +1,3 @@
 # Scripts
 
-Reserved for table, figure, and report-generation scripts.
+Utilities for running experiments and generating tables, figures, and reports.

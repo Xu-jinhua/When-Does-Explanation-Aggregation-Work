@@ -1,3 +1,4 @@
 # Configurations
 
-Reserved for versioned experiment configurations and release metadata.
+Versioned experiment configurations organized by dataset, model, explanation
+method, and aggregation setting.

@@ -1,0 +1,8 @@
+# LaTeX auxiliary output; published PDFs and source files remain tracked.
+results/latex/**/build/
+results/latex/**/*.aux
+results/latex/**/*.fdb_latexmk
+results/latex/**/*.fls
+results/latex/**/*.log
+results/latex/**/*.out
+results/latex/**/*.synctex.gz
