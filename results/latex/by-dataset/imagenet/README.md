@@ -1,19 +1,6 @@
-# ImageNet Results
+# ImageNet results
 
-This directory contains the LaTeX source for the dataset-level `ImageNet`
-result report. The compiled report is
-[`imagenet.pdf`](../../../pdf/by-dataset/imagenet.pdf).
+This report contains 194 generated LaTeX tables from released structured result and diagnostic exports.
+Tables are grouped by model in `tables.tex`; incomplete snapshots are retained and historical/superseded snapshots appear after the LaTeX appendix marker.
 
-| Protocol | Model | Settings |
-|:--|:--|:--|
-| Paper protocol | ResNet-18 | NAIVE, IND, NOISE-S, NOISE-K |
-| Paper protocol | ViT-B/16 | NAIVE, IND, NOISE-S, NOISE-K |
-
-The tables use the released structured summaries from commit
-[`d6e4b9bbfb3c`](https://github.com/Xu-jinhua/Workshop-When-Does-Explanations/tree/d6e4b9bbfb3c992ddd8eb7ec728e7b3cad85692f).
-
-Build the report from this directory with:
-
-```bash
-latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
-```
+The ImageNet-labelled rows use the 100-class ImageNet-1k subset (ImageNet100).

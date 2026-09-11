@@ -1,0 +1,109 @@
+schema_version: 1
+experiment_id: noise-generalization-pathmnist-densenet121-v1
+precision: fp32
+seed: 20260714
+methods_file: methods.yaml
+
+# This is a separate NAIVE source namespace for the one-cell NOISE
+# generalization experiment.  It does not share scheduler state with the
+# paper-main or assumptions runs.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/noise-generalization-pathmnist-densenet121-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/noise-generalization-pathmnist-densenet121-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/noise-generalization-pathmnist-densenet121-v1
+  spool_max_gib: 96
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  profile_directory: ./runs/noise-generalization-pathmnist-densenet121-v1/profiles
+  database_path: ./runs/noise-generalization-pathmnist-densenet121-v1/jobs.sqlite3
+  log_directory: ./runs/noise-generalization-pathmnist-densenet121-v1/logs
+  gpu_ids: [0]
+  search_grid: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+  default_profile_start: 256
+  shard_size: 512
+  prediction_batch_size: 512
+  dataloader_workers: 8
+  headroom_fraction: 0.05
+  max_retries: 1
+
+datasets:
+  - id: pathmnist
+    registry_key: pathmnist
+    # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
+    manifest_path: /path/to/pathmnist.manifest.json
+    splits: [test]
+    # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
+    cache_directory: ~/.cache/huggingface
+    keep_provider_in_memory: false
+    cache_images_in_ram: true
+
+models:
+  - id: pathmnist-densenet121
+    dataset: pathmnist
+    model_key: densenet121
+    architecture: cnn
+    num_classes: 9
+    init_mode: checkpoint
+    # Placeholder: train with `xai-exp phase0 train` (see docs/).
+    checkpoint_path: /path/to/pathmnist/densenet121/checkpoints/inference.pt
+    strict_checkpoint: true
+    # Placeholder: generate with `xai-exp phase0 compute-means` (see docs/).
+    mean_path: /path/to/pathmnist/densenet121/train-image-mean
+    mean_key: dataset_mean
+
+conditions:
+  - id: clean
+    kind: clean
+
+  - id: gaussian-0.15
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: gaussian, severity: 0.15}
+
+  - id: salt-pepper-0.05
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: salt_pepper, severity: 0.05}
+
+  - id: speckle-0.15
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: speckle, severity: 0.15}
+
+  - id: adversarial-sara-2-255
+    kind: adversarial
+    kwargs:
+      algorithm: sara-repetto-v2
+      epsilon: 0.00784313725490196
+      steps: 100
+      learning_rate: 0.1
+      classification_weight: 0.0001
+      top_fraction: 0.1
+      source_by_architecture:
+        cnn: DeepLift
+        vit: TransformerAttribution
+      batch_size_by_architecture:
+        cnn: 32
+        vit: 16
+
+phase2:
+  patch_sizes: [16]
+  primary_patch_size: 16
+  k: 20
+  inference_batch_size: 512
+  simpleavg_normalization: minmax
+  rrf_c: 60
+  kemeny_starts: 1
+  kemeny_max_passes: 1024
+  ensembles:
+    - id: all-paper-methods
+      methods: architecture_default
+      rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
+      include_singles: true

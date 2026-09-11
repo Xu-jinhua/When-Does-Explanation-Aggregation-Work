@@ -1,0 +1,82 @@
+schema_version: 1
+
+# This is the candidate-grid configuration for the public GitHub release.  It
+# is intentionally not a command that starts the matrix: the CLI
+# requires --confirm-full-matrix before any worker is launched.
+experiment_id: github-complete-results-v2
+seed: 20260714
+protocol: ../protocols/full-matrix.yaml
+methods_file: methods.yaml
+
+datasets:
+  - imagenet1k
+  - food101
+  - places365
+  - pathmnist
+  - dermamnist
+  - octmnist
+  - pneumoniamnist
+  - retinamnist
+  - breastmnist
+  - bloodmnist
+  - tissuemnist
+  - organamnist
+  - organcmnist
+  - organsmnist
+
+models:
+  - resnet18
+  - resnet50
+  - densenet121
+  - efficientnet_b0
+  - mobilenetv3_large_100
+  - vit_base_patch16_224
+  - deit_base_patch16_224
+  - swin_base_patch4_window7_224
+
+storage:
+  # Reference checkpoints and dataset/mean artifacts live under asset_root;
+  # transient worker state stays under run_root or in tmpfs and is not a Git
+  # artifact. Relative paths resolve against this file's directory.
+  asset_root: ./runs/github-complete-results-v2/assets
+  run_root: ./runs/github-complete-results-v2/run
+  # Dataset provider caches. The full Places365 source alone exceeds typical
+  # local-disk headroom; point cache_root at a large volume for a real run.
+  cache_root: ./runs/github-complete-results-v2/dataset-cache
+  selector_cache_root: /dev/shm/xai-simple/github-complete-results-v2-selector
+  # This loader requires the key. The value resolves relative to this file and
+  # is only used for rclone remotes; point it at a real rclone binary before a
+  # remote run (the simple pipeline discovers rclone on PATH when omitted).
+  rclone_binary: rclone
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used. For an rclone remote write 'remote:path'.
+  base_remote_root: ./runs/github-complete-results-v2/remote/base
+  prefix_remote_root: ./runs/github-complete-results-v2/remote/noise-prefix
+  assumptions_remote_root: ./runs/github-complete-results-v2/remote/assumptions
+
+runtime:
+  database_path: ./runs/github-complete-results-v2/jobs.sqlite3
+  log_directory: ./runs/github-complete-results-v2/logs
+  gpu_ids: [0]
+  headroom_fraction: 0.05
+  max_cpu_jobs: 4
+  max_retries: 1
+  poll_seconds: 2.0
+  training_reservation_gib: {cnn: 44, vit: 44}
+  compatibility_reservation_gib: {cnn: 44, vit: 44}
+
+training:
+  epochs: 100
+  batch_size: {cnn: 128, vit: 128}
+  validation_batch_size: {cnn: 128, vit: 128}
+  workers: 8
+  precision: bf16
+  recipe: timm_finetune
+  initialization: imagenet1k
+  class_balance:
+    dermamnist-resnet18: balanced_sampler
+
+# The gate uses a deterministic, label-diverse sample set from validation and
+# requires every member of the architecture's 11-method roster to pass against
+# the trained, real reference checkpoint.
+compatibility_samples: 4

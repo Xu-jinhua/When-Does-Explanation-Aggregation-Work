@@ -1,0 +1,65 @@
+schema_version: 1
+assumption_id: noise-generalization-pathmnist-densenet121-oracle-noise-v1
+base_config: paper-noise-generalization-pathmnist-densenet121.yaml
+
+# This consumer only builds Oracle NOISE.  The base p=16 NAIVE artifacts are
+# immutable inputs; no independent source models or IND bank are registered.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/noise-generalization-pathmnist-densenet121-oracle-noise-v1
+  spool_max_gib: 96
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/jobs.sqlite3
+  log_directory: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/logs
+  gpu_ids: [0]
+  inference_batch_size: 512
+  headroom_fraction: 0.05
+  max_retries: 1
+  cpu_workers: 2
+  training_reservation_gib: {cnn: 39.5, vit: 39.5}
+  phase1_reservation_gib: {cnn: 39.5, vit: 39.5}
+  selection_reservation_gib: 12
+  rank_reservation_gib: 12
+  evaluation_reservation_gib: 10
+  phase1_batch_caps:
+    IntegratedGradients: 32
+    FeatureAblation: 1024
+    Occlusion: 1024
+    GradientShap: 64
+    DeepLiftShap: 64
+    PartialLRP: 128
+    FullLRP: 128
+
+training:
+  train_split: train
+  validation_split: validation
+  epochs: 100
+  batch_size: {cnn: 128, vit: 128}
+  validation_batch_size: {cnn: 128, vit: 128}
+  precision: bf16
+  class_balance:
+    default: none
+
+selection:
+  alpha: 0.05
+  bootstrap_replicates: 499
+  min_prefix: 2
+  selection_rule: largest_not_rejected
+  spearman_artifact: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/statistics/spearman-mallows-p196.npz
+  spearman_calibration_config: ../pilots/noise_gof_cost.yaml
+
+science:
+  settings: [oracle-noise]
+  split: test
+  patch_size: 16
+  k: 20
+  assignment_seed: 20260714

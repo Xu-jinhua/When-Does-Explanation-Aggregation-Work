@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "repository_url": "https://github.com/hila-chefer/Transformer-Explainability.git",
+  "revision": "c3e578f76b954e8528afeaaee26de3f07e3fe559",
+  "required_files": {
+    "LICENSE": "b00ff34230c492d8d0103a90bc8da180d2f5ce8032541f758402058cb82c18a1",
+    "baselines/ViT/ViT_LRP.py": "468e8af6757fa8175d6a6146b354aef52d3e563c1d6797eb377ccc1327a922d2",
+    "baselines/ViT/ViT_orig_LRP.py": "04a8beacfda0af716058e96c1ec36690b5954686e37c72210d42b731ae400f2e",
+    "baselines/ViT/helpers.py": "4db366adfa8772e203074f5f40192770a4ed97befad76db54bd9f4aedcc73d2a",
+    "baselines/ViT/layer_helpers.py": "94ff5295708e189838c957b2433f974e140d46fd67f8a1100ad5a2e50cf09401",
+    "baselines/ViT/weight_init.py": "7123469c03fe3470a6495b24a3a46697a3dae9fd84f1c791c7d7d0ea0ac3454e",
+    "modules/layers_ours.py": "4ef7d98d75c9b79e1a4ed0e96b92a8243ea01d478653b3fe96df1ca61a4841dc",
+    "modules/layers_lrp.py": "d1b38f609c9ed989c87d9524df6b48166a5730e8a0bffc648f05bed04117c4da"
+  },
+  "source_digest": "6ca979249e1fdc6b95ceca635f97d634f8f7f26e5a9f48318e6c9813e949681f"
+}

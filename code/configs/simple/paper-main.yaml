@@ -1,0 +1,148 @@
+schema_version: 1
+experiment_id: paper-main-v2
+precision: fp32
+seed: 20260714
+methods_file: methods.yaml
+
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-main-v2/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-main-v2/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+
+runtime:
+  profile_directory: ./runs/paper-main-v2/profiles
+  database_path: ./runs/paper-main-v2/jobs.sqlite3
+  log_directory: ./runs/paper-main-v2/logs
+  gpu_ids: [0]
+  search_grid: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+  default_profile_start: 256
+  shard_size: 512
+  prediction_batch_size: 512
+  dataloader_workers: 8
+  headroom_fraction: 0.10
+  max_retries: 1
+
+datasets:
+  - id: imagenet1k
+    registry_key: imagenet1k
+    # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
+    manifest_path: /path/to/imagenet1k.manifest.json
+    splits: [test]
+    # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
+    # Official torchvision ImageNet root; XAI_IMAGENET1K_ROOT overrides this.
+    cache_directory: /path/to/ilsvrc2012
+    keep_provider_in_memory: false
+    cache_images_in_ram: false
+
+  - id: dermamnist
+    registry_key: dermamnist
+    # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
+    manifest_path: /path/to/dermamnist.manifest.json
+    splits: [test]
+    # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
+    cache_directory: ~/.cache/huggingface
+    keep_provider_in_memory: false
+    cache_images_in_ram: false
+
+models:
+  - id: imagenet1k-resnet18
+    dataset: imagenet1k
+    model_key: resnet18
+    architecture: cnn
+    num_classes: 1000
+    init_mode: checkpoint
+    # Placeholder: train with `xai-exp phase0 train` (see docs/).
+    checkpoint_path: /path/to/imagenet1k/resnet18/checkpoints/inference.pt
+    strict_checkpoint: true
+    # Placeholder: generate with `xai-exp phase0 compute-means` (see docs/).
+    mean_path: /path/to/imagenet1k/resnet18/train-image-mean
+    mean_key: dataset_mean
+
+  - id: imagenet1k-vit-b16
+    dataset: imagenet1k
+    model_key: vit_base_patch16_224
+    architecture: vit
+    num_classes: 1000
+    init_mode: checkpoint
+    checkpoint_path: /path/to/imagenet1k/vit-b16/checkpoints/inference.pt
+    strict_checkpoint: true
+    mean_path: /path/to/imagenet1k/vit-b16/train-image-mean
+    mean_key: dataset_mean
+
+  - id: dermamnist-resnet18
+    dataset: dermamnist
+    model_key: resnet18
+    architecture: cnn
+    num_classes: 7
+    init_mode: checkpoint
+    # Full-reference checkpoint produced by the one-time simple training command.
+    checkpoint_path: /path/to/dermamnist/resnet18/checkpoints/inference.pt
+    strict_checkpoint: true
+    mean_path: /path/to/dermamnist/resnet18/train-image-mean
+    mean_key: dataset_mean
+
+  - id: dermamnist-vit-b16
+    dataset: dermamnist
+    model_key: vit_base_patch16_224
+    architecture: vit
+    num_classes: 7
+    init_mode: checkpoint
+    checkpoint_path: /path/to/dermamnist/vit-b16/checkpoints/inference.pt
+    strict_checkpoint: true
+    mean_path: /path/to/dermamnist/vit-b16/train-image-mean
+    mean_key: dataset_mean
+
+conditions:
+  - id: clean
+    kind: clean
+
+  - id: gaussian-0.15
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: gaussian, severity: 0.15}
+
+  - id: salt-pepper-0.05
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: salt_pepper, severity: 0.05}
+
+  - id: speckle-0.15
+    kind: factory
+    factory: xai_ensemble.simple.conditions:natural_corruption
+    kwargs: {kind: speckle, severity: 0.15}
+
+  - id: adversarial-sara-2-255
+    kind: adversarial
+    kwargs:
+      algorithm: sara-repetto-v2
+      epsilon: 0.00784313725490196
+      steps: 100
+      learning_rate: 0.1
+      classification_weight: 0.0001
+      top_fraction: 0.1
+      source_by_architecture:
+        cnn: DeepLift
+        # Immutable artifact id; implementation/semantics: GradientAttentionRollout.
+        vit: TransformerAttribution
+      batch_size_by_architecture:
+        cnn: 32
+        vit: 16
+
+phase2:
+  patch_sizes: [8, 14, 16]
+  primary_patch_size: 16
+  k: 20
+  inference_batch_size: 512
+  simpleavg_normalization: minmax
+  rrf_c: 60
+  kemeny_starts: 1
+  kemeny_max_passes: 1024
+  ensembles:
+    - id: all-paper-methods
+      methods: architecture_default
+      rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
+      include_singles: true

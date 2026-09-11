@@ -1,0 +1,106 @@
+schema_version: 1
+
+# This is the single source of formal explainer parameters for all modules.
+# All baselines are represented in model-input space.  dataset_mean is loaded
+# from the registered train-split raw mean and normalized once.  The Gaussian
+# member of combined_zero_gaussian_mean is a fixed N(0,1) model-input tensor.
+methods:
+  - family: Saliency
+    architectures: [cnn, vit]
+    params: {}
+
+  - family: InputXGradient
+    architectures: [cnn, vit]
+    params: {}
+
+  - family: IntegratedGradients
+    architectures: [cnn, vit]
+    profile_start: 8
+    params:
+      n_steps: 200
+      baseline: zero
+      baseline_space: model_input
+
+  - family: GuidedBackprop
+    architectures: [cnn]
+    params: {}
+
+  - family: Deconvolution
+    architectures: [cnn]
+    params: {}
+
+  - family: FeatureAblation
+    architectures: [cnn, vit]
+    profile_start: 2
+    probe_perturbations: 3
+    params:
+      baseline: zero
+      baseline_space: model_input
+    variants:
+      - patch_size: 8
+      - patch_size: 14
+      - patch_size: 16
+
+  - family: Occlusion
+    architectures: [cnn, vit]
+    profile_start: 2
+    probe_perturbations: 3
+    params:
+      baseline: dataset_mean
+      baseline_space: model_input
+    variants:
+      - patch_size: 8
+      - patch_size: 14
+      - patch_size: 16
+
+  - family: DeepLift
+    architectures: [cnn]
+    profile_start: 32
+    params:
+      baseline: dataset_mean
+      baseline_space: model_input
+
+  - family: GradientShap
+    architectures: [cnn, vit]
+    profile_start: 16
+    params:
+      n_samples: 40
+      baseline_distribution: combined_zero_gaussian_mean
+      gaussian_space: model_input
+
+  - family: DeepLiftShap
+    architectures: [cnn]
+    profile_start: 8
+    params:
+      baseline_distribution: combined_zero_gaussian_mean
+      gaussian_space: model_input
+
+  - family: LRP
+    architectures: [cnn]
+    profile_start: 16
+    params: {}
+
+  - family: CheferTransformerAttribution
+    architectures: [vit]
+    profile_start: 16
+    params: {}
+
+  - family: PartialLRP
+    architectures: [vit]
+    profile_start: 4
+    params: {}
+
+  - family: FullLRP
+    architectures: [vit]
+    profile_start: 4
+    params: {}
+
+  - family: GradientAttentionRollout
+    architectures: [vit]
+    profile_start: 32
+    params: {}
+
+  - family: AttentionGradCAM
+    architectures: [vit]
+    profile_start: 32
+    params: {}

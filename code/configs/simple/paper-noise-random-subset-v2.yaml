@@ -1,0 +1,50 @@
+schema_version: 1
+study_id: paper-noise-random-subset-v2
+noise_prefix_config: paper-noise-prefix-sweep.yaml
+independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/independent-geometry-noise-v1/selector.json
+
+# This Phase-2-only mechanism audit reads immutable p=16 rank-ready inputs and
+# writes to a new namespace. It never regenerates attribution.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-noise-random-subset-v2/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-noise-random-subset-v2/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/paper-noise-random-subset-v2
+  spool_max_gib: 64
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/paper-noise-random-subset-v2/jobs.sqlite3
+  log_directory: ./runs/paper-noise-random-subset-v2/logs
+  shared_cache_root: ./runs/paper-noise-random-subset-v2/shared-cache
+  gpu_ids: [0]
+  inference_batch_size: 512
+  selection_reservation_gib: 12
+  evaluation_reservation_gib: 16
+  aggregation_workspace_gib: 2
+  headroom_fraction: 0.05
+  max_retries: 1
+  cpu_workers: 3
+
+science:
+  split: test
+  patch_size: 16
+  k: 20
+  cells: [dermamnist--dermamnist-resnet18]
+  conditions: [clean]
+  geometries: [spearman, kendall]
+  rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
+  random_seed: 20260810
+  # Enumerate every non-reference q-subset (54 for q=2 and 164 for q=3)
+  # before uniformly sampling the accepted control bank.
+  candidate_draw_count: 164
+  selected_candidate_count: 10
+  minimum_accepted_candidates: 5
+  fit_policy: exact_subset_mallows_empirical_cdf_ks_not_worse_than_reference
+  candidate_policy: fixed_seed_uniform_nonreference_fixed_q_candidate_pool
+  selection_policy: uniform_without_replacement_from_noise_consistent_pool

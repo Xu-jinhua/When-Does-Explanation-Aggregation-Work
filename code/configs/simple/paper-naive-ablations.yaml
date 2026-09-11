@@ -1,0 +1,53 @@
+schema_version: 1
+ablation_id: paper-naive-ablations-v1
+base_config: paper-main.yaml
+
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-naive-ablations-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-naive-ablations-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  # The spool is a tmpfs staging area for pending shard uploads.
+  spool_root: /dev/shm/xai-simple/paper-naive-ablations-v1
+  spool_max_gib: 160
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/paper-naive-ablations-v1/jobs.sqlite3
+  log_directory: ./runs/paper-naive-ablations-v1/logs
+  gpu_ids: [0]
+  inference_batch_size: 384
+  evaluation_reservation_gib: 9
+  rank_reservation_gib: 9
+  headroom_fraction: 0.10
+  max_retries: 1
+  phase1_batch_caps:
+    FeatureAblation: 512
+    Occlusion: 512
+    GradientShap: 32
+  phase1_reservation_floor_gib:
+    FeatureAblation: 12
+    Occlusion: 12
+
+scope:
+  dataset: imagenet1k
+  model: imagenet1k-resnet18
+  split: test
+  ensemble: all-paper-methods
+  patch_size: 16
+
+table2:
+  top_k: [10, 20, 40, 80]
+
+table4:
+  fills: [dataset_mean, class_mean]
+
+table5:
+  gaussian: [0.10, 0.15, 0.20]
+  salt_pepper: [0.03, 0.05, 0.08]
+  speckle: [0.10, 0.15, 0.20]
+  adversarial_numerators: [1, 2, 4]

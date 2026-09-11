@@ -1,0 +1,32 @@
+schema_version: 1
+
+# The core protocol supplies the locked evaluation semantics.  This overlay
+# only gives the GitHub candidate-grid run its own immutable run/storage
+# identity; concrete dataset contracts live in xai_ensemble.data.specs.
+include: core.yaml
+
+run:
+  id: github-complete-results-v2
+  seed: 20260714
+  # Keep the full-matrix protocol identity independent of inherited
+  # XAI_RUN_ROOT and XAI_CACHE_ROOT environment variables: these values are
+  # deliberately plain literals, not environment substitutions.
+  output_root: ./runs
+  cache_root: ./cache
+
+training:
+  precision: bf16
+  epochs: 100
+  reference_initialization: imagenet1k
+  reference_recipe: timm_finetune
+
+storage:
+  provider: cloudstorage
+  private: true
+  revision: github-complete-results-v2
+  # Absolute placeholder paths, again deliberately literal so ambient
+  # XAI_CLOUD_STORAGE_* variables cannot shift the protocol identity.  Fill
+  # them in for the deployment's sealed-artifact mount and local lock
+  # directory before running the matrix.
+  root: /path/to/cloudstorage
+  lock_root: /path/to/cloudstorage-locks

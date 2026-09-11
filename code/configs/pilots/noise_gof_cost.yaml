@@ -1,0 +1,52 @@
+name: noise_gof_cost
+description: Select a feasible discrete parametric-bootstrap budget before formal NOISE runs.
+bootstrap_candidates: [99, 199, 499, 999]
+test_sample_counts: [5000, 10015]
+method_counts: [4, 8, 10, 13, 16]
+distance_count_projection: full_test_samples_times_prefix_size
+pass:
+  deterministic_seed: true
+  maximum_minutes_per_dataset_model_aggregation: 30
+  pvalue_monte_carlo_se_at_0_05_max: 0.01
+selection: smallest_budget_meeting_precision_and_time
+spearman_mallows_approximation:
+  reason: exact Spearman-distance multiplicities are infeasible at the 256-patch grid
+  adapter: xai_ensemble.phase2.selection:locked_spearman_family_factory
+  algorithm: deterministic_mixture_importance_sampling
+  # Each proposal is an exactly normalized Kendall--Mallows law. q=0 anchors
+  # the identity tail and q=1 is an exact uniform-permutation proposal.
+  proposal_q: [0.0, 0.001, 0.005, 0.01, 0.03, 0.05, 0.1, 0.15, 0.25, 0.35, 0.5, 0.6, 0.7, 0.8, 0.87, 0.92, 0.95, 0.97, 0.98, 0.99, 0.995, 0.998, 0.9995, 1.0]
+  chains: 4
+  draws_per_chain: 7200
+  histogram_bins: 512
+  exact_enumeration_max_items: 8
+  # Pre-formal stability/cost input. This avoids depending on formal Phase 1;
+  # it does not select the NOISE subset or enter any reported metric.
+  # Covers the largest current core test-pool x method-roster distance count.
+  synthetic_validation_count: 180000
+  synthetic_validation_q: [0.6, 0.8, 0.92, 0.97, 0.99]
+  bootstrap_replicates: 499
+  projected_prefix_count: 14
+  resource_limits:
+    maximum_items: 512
+    maximum_exact_permutations: 1000000
+    maximum_total_draws: 2000000
+    maximum_validation_distances: 200000
+    maximum_working_bytes: 2147483648
+    maximum_bootstrap_replicates: 2000
+    maximum_projected_prefix_count: 64
+    maximum_artifact_bytes: 67108864
+    maximum_wall_seconds: 21600
+  pass:
+    converged: true
+    r_hat_max: 1.05
+    effective_sample_size_min: 1000
+    repeated_p_value_absolute_difference_max: 0.02
+    # Every validation bin must be sampled; consequential Monte Carlo
+    # instability is separately caught by the two-half repeated-p-value gate.
+    validation_bin_effective_sample_size_min: 1
+    maximum_interpolated_empty_bin_run: 4
+    maximum_unsampled_distance_gap_fraction: 0.05
+    upper_tail_confidence_alpha: 0.05
+    upper_tail_probability_bound_max: 0.01
+  forbid_uniform_distance_support_surrogate: true

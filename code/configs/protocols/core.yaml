@@ -1,0 +1,282 @@
+schema_version: 1
+
+run:
+  id: core-v2
+  seed: 20260714
+  output_root: ${XAI_RUN_ROOT:-./runs}
+  cache_root: ${XAI_CACHE_ROOT:-./cache}
+
+datasets:
+  imagenet1k:
+    provider: imagenet
+    registry_key: imagenet1k
+    revision: ilsvrc2012-train-val-hash-holdout-50-per-class-v1
+    root_environment: XAI_IMAGENET1K_ROOT
+    train_split: train
+    validation_split: validation
+    test_split: test
+    expected_counts:
+      train: 1231167
+      validation: 50000
+      test: 50000
+    expected_classes: 1000
+    image_size: 224
+    pin_content_hashes: true
+  dermamnist:
+    provider: medmnist
+    version: 3.0.2
+    data_flag: dermamnist
+    image_size: 224
+    zenodo_record: "10519652"
+    filename: dermamnist_224.npz
+    md5: 8974907d8e169bef5f5b96bc506ae45d
+    official_splits: true
+
+models:
+  cnn:
+    - id: resnet18
+      implementation: timm
+      architecture: resnet18
+  vit:
+    - id: vit_base_patch16_224
+      implementation: timm
+      architecture: vit_base_patch16_224
+  standard_init:
+    imagenet1k: imagenet1k_pretrained
+    dermamnist: imagenet1k_pretrained
+  ind_init: random
+  overlap_init: random
+  reference_init: pilot_selected
+  exact_checkpoint_hash_required: true
+
+training:
+  precision: bf16
+  epochs: 100
+  selection_metric: validation_accuracy
+  save_best: true
+  save_last: true
+  gradient_accumulation: 1
+  gradient_checkpointing: false
+  # The DermaMNIST/ResNet-18 recovery established that train-only balanced
+  # sampling restores class coverage without touching validation or test data.
+  # This applies to the reference and every IND/OVERLAP source model.
+  class_balance:
+    dermamnist:
+      resnet18: balanced_sampler
+  cnn:
+    optimizer: sgd
+    learning_rate: 0.001
+    momentum: 0.9
+    weight_decay: 0.0001
+    scheduler: cosine
+  vit:
+    recipe: manuscript_fixed
+    optimizer: adamw
+    learning_rate: 0.00005
+    weight_decay: 0.05
+    warmup_epochs: 5
+    scheduler: cosine
+
+explainers:
+  one_instance_per_family: true
+  require_method_lock: true
+  compatibility_gate:
+    # Other candidates are deliberately roster-filtered by the pilot.  These
+    # methods define the minimum scientifically required implementation set.
+    required_by_architecture:
+      cnn: [LRP]
+      vit: [CheferTransformerAttribution, PartialLRP, FullLRP, GradientAttentionRollout, AttentionGradCAM]
+    minimum_generic_compatible_by_architecture:
+      cnn: 1
+      vit: 1
+  cnn_candidates:
+    - Saliency
+    - InputXGradient
+    - IntegratedGradients
+    - GuidedBackprop
+    - Deconvolution
+    - FeatureAblation
+    - Occlusion
+    - DeepLift
+    - GradientShap
+    - DeepLiftShap
+    - LRP
+  vit_candidates:
+    # Generic input explainers enter only when the compatibility pilot passes.
+    - Saliency
+    - InputXGradient
+    - IntegratedGradients
+    - FeatureAblation
+    - Occlusion
+    - GradientShap
+    # Target-specific ViT explainers.  Partial/Full LRP use the pinned
+    # original-LRP provider; CheferTransformerAttribution uses layers_ours.
+    - CheferTransformerAttribution
+    - PartialLRP
+    - FullLRP
+    - GradientAttentionRollout
+    - AttentionGradCAM
+  # Resolved into locked_defaults by the protocol reader. Do not duplicate
+  # method parameters here; Phase 1 reads the same catalog directly.
+  methods_file: ../simple/methods.yaml
+
+targets:
+  naive: model_prediction
+  ind: reference_prediction
+  robustness: clean_prediction_fixed
+  require_common_ind_target: true
+
+ranking:
+  patch_score: absolute_channel_spatial_mean
+  base: 1
+  tie_break: pilot_selected
+
+evaluation:
+  patch_size: 16
+  top_k: 20
+  fill: dataset_mean
+  fill_source_split: train
+  metrics: [fidelity, complementary_fidelity, consistency, complementary_consistency]
+  save_per_sample_trace: true
+  primary_domain: raw_0_1
+
+aggregation:
+  methods: [simple_mean, borda, kemeny, rrf, schulze]
+  simple_mean:
+    object: attribution
+    canonical_channel_reduction: signed_mean
+    normalization: zscore_per_sample_method
+    reduction: arithmetic_mean
+  rrf:
+    c: 60
+  kemeny:
+    solver: multistart_local_search
+    pilot_lock_required: true
+  tie_break: pilot_selected
+
+ind:
+  source_count: from_method_lock
+  partition_families: 3
+  partition_train_and_validation: true
+  stratified: true
+  assignment: cyclic_latin
+  controls:
+    - matched_overlap
+    - full_reference_naive
+    - matched_naive_descriptive
+  overlap_mode: shared_stratified_subset
+  evaluator: full_data_reference_model
+
+noise_selection:
+  mode: in_sample_oracle
+  ordering_metric: fidelity
+  patch_size: 16
+  top_k: 20
+  fill: dataset_mean
+  minimum_members: 3
+  selection: maximum_bootstrap_p
+  tie_break: larger_subset
+  all_rejected: maximum_bootstrap_p_with_forced_fallback
+  bootstrap_replicates: pilot_selected
+  accepted_p_adjustment: none_for_oracle_max_p_selection
+  label_in_results: Oracle NOISE
+
+corruptions:
+  shared_across_models_and_methods: true
+  domain: raw_0_1
+  clip: [0.0, 1.0]
+  # The formal manuscript estimand compares the clean input with one shared,
+  # deterministic perturbed counterpart for each condition.  The pilot lock
+  # therefore resolves this field to exactly one; multi-realization checks are
+  # optional diagnostics and are not a formal averaging operation.
+  realizations: pilot_selected
+  conditions:
+    - {kind: gaussian, severity: 0.15}
+    - {kind: salt_pepper, severity: 0.05}
+    - {kind: speckle, severity: 0.15}
+
+attack:
+  kind: per_sample_rank
+  norm: linf
+  epsilon: 0.03137254901960784
+  top_k: 20
+  objective: [topk_replacement, weighted_kendall, full_kendall]
+  preserve_reference_prediction: true
+  steps: pilot_selected
+  step_size: pilot_selected
+  restarts: pilot_selected
+  sample_count: pilot_selected
+  source_methods: pilot_selected
+  transfer_to_all_methods: true
+  aggregate_same_attacked_input: true
+  report:
+    - prediction_preservation_rate
+    - asr_any
+    - asr_50
+    - mean_topk_replacement
+    - weighted_kendall
+    - full_kendall
+    - robustness
+
+statistics:
+  oracle_best_single: per_dataset_model_metric
+  oracle_reselect_inside_bootstrap: true
+  cell_bootstrap_replicates: 2000
+  paired: true
+  class_stratified: true
+  ind_hierarchical: true
+  multiple_comparisons: holm
+  confidence: 0.95
+  familywise_alpha: 0.05
+  save_signed_robustness_change: true
+
+runtime:
+  executable: xai-exp
+  devices: [0, 1]
+  workers_per_gpu: 1
+  dataloader_workers: pilot_selected
+  batch_size: pilot_selected
+  prefetch_factor: 2
+  persistent_workers: true
+  compile: false
+  resume: true
+  max_retries: 2
+  phase1_shard_size: 500
+  job_resources:
+    # Ready upload/validation/evaluation work deliberately outranks new
+    # training. This bounds local checkpoint accumulation under the 100 GiB
+    # disk budget while still allowing both GPUs to stay busy when the job
+    # runner has separate CPU capacity (see the server runbook).
+    dataset_manifest: {gpu_count: 0, priority: 120, max_retries: 2}
+    dataset_means: {gpu_count: 0, priority: 110, max_retries: 2}
+    partition: {gpu_count: 0, priority: 115, max_retries: 2}
+    training: {gpu_count: 1, priority: 80, max_retries: 2}
+    source_index: {gpu_count: 0, priority: 103, max_retries: 2}
+    source_bank_gate: {gpu_count: 1, priority: 102, max_retries: 1}
+    attack_inputs: {gpu_count: 0, priority: 101, max_retries: 2}
+    attack_selector: {gpu_count: 0, priority: 100, max_retries: 2}
+    attack: {gpu_count: 1, priority: 97, max_retries: 2}
+    phase1: {gpu_count: 1, priority: 98, max_retries: 2}
+    barrier: {gpu_count: 0, priority: 96, max_retries: 2}
+    phase2: {gpu_count: 1, priority: 94, max_retries: 2}
+    robustness: {gpu_count: 0, priority: 92, max_retries: 2}
+    statistics: {gpu_count: 0, priority: 93, max_retries: 2}
+    cleanup: {gpu_count: 0, priority: 104, max_retries: 2}
+    upload: {gpu_count: 0, priority: 105, max_retries: 4}
+
+storage:
+  # This formal run is intentionally single-server.  CloudStorage holds sealed
+  # Stage-0/1 artifacts; local receipts remain the transaction authority and
+  # ModelScope is not contacted.
+  provider: cloudstorage
+  private: true
+  revision: ${XAI_CLOUD_STORAGE_REVISION:-core-v2}
+  # ``revision`` is an actual child namespace beneath this mount root.
+  root: ${XAI_CLOUD_STORAGE_ROOT:-./runs/cloudstorage}
+  lock_root: ${XAI_CLOUD_STORAGE_LOCK_ROOT:-./runs/cloudstorage-locks}
+  require_remote_revision: true
+  require_sha256: true
+  # Leave a 30-GiB local-disk low-watermark on the current server.  Sealed
+  # source shards are read lazily from CloudStorage rather than retained here.
+  cache_max_bytes: 8589934592
+  evict_after_task: true

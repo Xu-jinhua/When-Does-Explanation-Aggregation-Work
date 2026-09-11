@@ -1,0 +1,785 @@
+{
+  "cells": [
+    {
+      "cell": "dermamnist--dermamnist-resnet18",
+      "dataset": "dermamnist",
+      "geometries": {
+        "kendall": {
+          "candidates": [
+            {
+              "mean_distance": 7.7965087281795515,
+              "q": 2,
+              "score": 0.07948759554786265,
+              "theta": 3.473131219853384
+            },
+            {
+              "mean_distance": 8.666832917705735,
+              "q": 3,
+              "score": 0.08504449677507007,
+              "theta": 3.1893143947718006
+            },
+            {
+              "mean_distance": 9.306483790523691,
+              "q": 4,
+              "score": 0.07213092851117209,
+              "theta": 2.9893828466366594
+            },
+            {
+              "mean_distance": 10.049875311720697,
+              "q": 5,
+              "score": 0.06785723849583518,
+              "theta": 2.7636813426791464
+            },
+            {
+              "mean_distance": 10.186783042394016,
+              "q": 6,
+              "score": 0.06576319124966444,
+              "theta": 2.722711608828061
+            },
+            {
+              "mean_distance": 10.127609547559672,
+              "q": 7,
+              "score": 0.06140704557779108,
+              "theta": 2.740400152634482
+            },
+            {
+              "mean_distance": 10.567331670822943,
+              "q": 8,
+              "score": 0.06128993106963114,
+              "theta": 2.6095718120857097
+            },
+            {
+              "mean_distance": 10.691548905513994,
+              "q": 9,
+              "score": 0.059894782627655845,
+              "theta": 2.5728393548897834
+            },
+            {
+              "mean_distance": 11.294862842892767,
+              "q": 10,
+              "score": 0.05797015815000923,
+              "theta": 2.395372067372503
+            },
+            {
+              "mean_distance": 11.406529131716164,
+              "q": 11,
+              "score": 0.054643266521546496,
+              "theta": 2.362633961969185
+            }
+          ],
+          "center_rule": "kemeny",
+          "label": "NOISE-K",
+          "mean_distance": 8.666832917705735,
+          "method_prefix": [
+            "Deconvolution",
+            "GuidedBackprop",
+            "Occlusion"
+          ],
+          "q": 3,
+          "score": 0.08504449677507007,
+          "theta": 3.1893143947718006
+        },
+        "spearman": {
+          "candidates": [
+            {
+              "mean_distance": 7.7965087281795515,
+              "q": 2,
+              "score": 0.07948759554786265,
+              "theta": 3.473131219853384
+            },
+            {
+              "mean_distance": 9.701579384871156,
+              "q": 3,
+              "score": 0.07591694217637289,
+              "theta": 2.868681532443399
+            },
+            {
+              "mean_distance": 9.997506234413965,
+              "q": 4,
+              "score": 0.06702029153892128,
+              "theta": 2.779395341438745
+            },
+            {
+              "mean_distance": 10.734563591022443,
+              "q": 5,
+              "score": 0.06769479474287184,
+              "theta": 2.560138527489787
+            },
+            {
+              "mean_distance": 10.844139650872817,
+              "q": 6,
+              "score": 0.06353832517657947,
+              "theta": 2.5278244643804557
+            },
+            {
+              "mean_distance": 10.745065906661917,
+              "q": 7,
+              "score": 0.06288431045100776,
+              "theta": 2.5570389388315338
+            },
+            {
+              "mean_distance": 11.103304239401496,
+              "q": 8,
+              "score": 0.06428707843388022,
+              "theta": 2.4515899506501233
+            },
+            {
+              "mean_distance": 11.181767802715434,
+              "q": 9,
+              "score": 0.05630113749150283,
+              "theta": 2.4285521801188485
+            },
+            {
+              "mean_distance": 11.736508728179551,
+              "q": 10,
+              "score": 0.05640104689874003,
+              "theta": 2.2659474702187454
+            },
+            {
+              "mean_distance": 11.814055769666743,
+              "q": 11,
+              "score": 0.055125232811386184,
+              "theta": 2.2432221013129467
+            }
+          ],
+          "center_rule": "borda",
+          "label": "NOISE-S",
+          "mean_distance": 7.7965087281795515,
+          "method_prefix": [
+            "Deconvolution",
+            "GuidedBackprop"
+          ],
+          "q": 2,
+          "score": 0.07948759554786265,
+          "theta": 3.473131219853384
+        }
+      },
+      "model": "dermamnist-resnet18",
+      "ordered_methods": [
+        "Deconvolution",
+        "GuidedBackprop",
+        "Occlusion",
+        "FeatureAblation",
+        "DeepLiftShap",
+        "DeepLift",
+        "GradientShap",
+        "Saliency",
+        "IntegratedGradients",
+        "LRP",
+        "InputXGradient"
+      ],
+      "q_K": 3,
+      "q_S": 2,
+      "source": {
+        "base_phase2_manifest_content_digest": "6bbcfac87359bb018fe31a1aafa42da31e3a38a5729b3cc9622f6bc19af6372d",
+        "base_phase2_task_digest": "40ee4f04f1a2a32bb7b56ba57dcef5cd51308ca27db06c9d434c879ddf7e15e4",
+        "individual_clean_f_digest": "5d37bd70ab7737763ff82972dfc30fdee7f441065f17e86f25c8a905e18b5dba",
+        "prefix_manifest_content_digest": "c9c272b8cf926db1df922b9bc4000bff406a7ac990ed843606178bd21f794143",
+        "prefix_task_digest": "e05a7861c3989431912db8d87d1e0060d8d9acd17f1723be22d6ad739073c80b",
+        "source_digest": "1650ba56e86506a40dffc0336eac30e6c1b629e306de12b56609b9870cdf686f"
+      }
+    },
+    {
+      "cell": "dermamnist--dermamnist-vit-b16",
+      "dataset": "dermamnist",
+      "geometries": {
+        "kendall": {
+          "candidates": [
+            {
+              "mean_distance": 3.471072319201995,
+              "q": 2,
+              "score": 0.1048948247336353,
+              "theta": 5.337823555918241
+            },
+            {
+              "mean_distance": 5.501911886949293,
+              "q": 3,
+              "score": 0.10586747873832249,
+              "theta": 4.328013507211972
+            },
+            {
+              "mean_distance": 7.2285536159601,
+              "q": 4,
+              "score": 0.10866484634571964,
+              "theta": 3.667870134105576
+            },
+            {
+              "mean_distance": 7.9151122194513714,
+              "q": 5,
+              "score": 0.11110037274757135,
+              "theta": 3.433501044946241
+            },
+            {
+              "mean_distance": 7.79260182876143,
+              "q": 6,
+              "score": 0.10875861395855117,
+              "theta": 3.4744423561130375
+            },
+            {
+              "mean_distance": 8.031920199501247,
+              "q": 7,
+              "score": 0.10983253128322441,
+              "theta": 3.3947880864098776
+            },
+            {
+              "mean_distance": 8.007044887780548,
+              "q": 8,
+              "score": 0.10754626841949193,
+              "theta": 3.403006646730235
+            },
+            {
+              "mean_distance": 7.872873372125243,
+              "q": 9,
+              "score": 0.10936752354380541,
+              "theta": 3.4475767962993116
+            },
+            {
+              "mean_distance": 8.150573566084788,
+              "q": 10,
+              "score": 0.10931658095535912,
+              "theta": 3.3557721937069473
+            },
+            {
+              "mean_distance": 9.018680571299026,
+              "q": 11,
+              "score": 0.10925068289886532,
+              "theta": 3.078575227400399
+            }
+          ],
+          "center_rule": "kemeny",
+          "label": "NOISE-K",
+          "mean_distance": 7.9151122194513714,
+          "method_prefix": [
+            "CheferTransformerAttribution",
+            "GradientAttentionRollout",
+            "GradientShap",
+            "Occlusion",
+            "FeatureAblation"
+          ],
+          "q": 5,
+          "score": 0.11110037274757135,
+          "theta": 3.433501044946241
+        },
+        "spearman": {
+          "candidates": [
+            {
+              "mean_distance": 3.471072319201995,
+              "q": 2,
+              "score": 0.1048948247336353,
+              "theta": 5.337823555918241
+            },
+            {
+              "mean_distance": 6.195178719866999,
+              "q": 3,
+              "score": 0.106129401825383,
+              "theta": 4.048157904885176
+            },
+            {
+              "mean_distance": 8.213216957605985,
+              "q": 4,
+              "score": 0.10247247065307666,
+              "theta": 3.3352945675504655
+            },
+            {
+              "mean_distance": 8.980847880299251,
+              "q": 5,
+              "score": 0.11010666741756522,
+              "theta": 3.090388645870447
+            },
+            {
+              "mean_distance": 8.770324189526185,
+              "q": 6,
+              "score": 0.11082585270382057,
+              "theta": 3.156532757085249
+            },
+            {
+              "mean_distance": 8.826790167438546,
+              "q": 7,
+              "score": 0.11206913012396513,
+              "theta": 3.1387222001255424
+            },
+            {
+              "mean_distance": 8.654488778054862,
+              "q": 8,
+              "score": 0.11272987335153453,
+              "theta": 3.193236723590391
+            },
+            {
+              "mean_distance": 8.49371016902189,
+              "q": 9,
+              "score": 0.11247092275318267,
+              "theta": 3.2445709131474327
+            },
+            {
+              "mean_distance": 8.71216957605985,
+              "q": 10,
+              "score": 0.11256626617427731,
+              "theta": 3.1749312929951756
+            },
+            {
+              "mean_distance": 9.652777148038993,
+              "q": 11,
+              "score": 0.11244590271045912,
+              "theta": 2.8834923505095027
+            }
+          ],
+          "center_rule": "borda",
+          "label": "NOISE-S",
+          "mean_distance": 8.654488778054862,
+          "method_prefix": [
+            "CheferTransformerAttribution",
+            "GradientAttentionRollout",
+            "GradientShap",
+            "Occlusion",
+            "FeatureAblation",
+            "PartialLRP",
+            "Saliency",
+            "IntegratedGradients"
+          ],
+          "q": 8,
+          "score": 0.11272987335153453,
+          "theta": 3.193236723590391
+        }
+      },
+      "model": "dermamnist-vit-b16",
+      "ordered_methods": [
+        "CheferTransformerAttribution",
+        "GradientAttentionRollout",
+        "GradientShap",
+        "Occlusion",
+        "FeatureAblation",
+        "PartialLRP",
+        "Saliency",
+        "IntegratedGradients",
+        "InputXGradient",
+        "AttentionGradCAM",
+        "FullLRP"
+      ],
+      "q_K": 5,
+      "q_S": 8,
+      "source": {
+        "base_phase2_manifest_content_digest": "928481e2102d73079e2995310a877d355a1ce86585dd74992870d7cdca9fea2c",
+        "base_phase2_task_digest": "dcaaeddd7d0779b1a9fa58031fbe574b3386dc082ee364072b8c5ec4e773c5ef",
+        "individual_clean_f_digest": "523ea076142a12eef637b9d94f6d8e8a3ffbe35c157ca8ac1f011ee3cc47b7ac",
+        "prefix_manifest_content_digest": "24691523ba4ce99cb77e1bb32abc27c3c8418fd5a80656dfe57aff7e36203aa5",
+        "prefix_task_digest": "c56d65ea8f9ff24dd58ec487d8660f1b697de5f5e998c8aaef34ca58cc4dba11",
+        "source_digest": "b66c01543c947c1b86523f6b1546a08b76c9f537132941d3d9fb0d723b4a95d1"
+      }
+    },
+    {
+      "cell": "imagenet100--imagenet100-resnet18",
+      "dataset": "imagenet100",
+      "geometries": {
+        "kendall": {
+          "candidates": [
+            {
+              "mean_distance": 5.7148,
+              "q": 2,
+              "score": 0.17106650562199358,
+              "theta": 4.239551141306414
+            },
+            {
+              "mean_distance": 4.046133333333334,
+              "q": 3,
+              "score": 0.16967325238232667,
+              "theta": 5.013329316201435
+            },
+            {
+              "mean_distance": 6.3539,
+              "q": 4,
+              "score": 0.1704456902973171,
+              "theta": 3.987172870314356
+            },
+            {
+              "mean_distance": 7.15368,
+              "q": 5,
+              "score": 0.17978328343698355,
+              "theta": 3.694213138260613
+            },
+            {
+              "mean_distance": 7.259266666666667,
+              "q": 6,
+              "score": 0.17370307034940294,
+              "theta": 3.657112355683055
+            },
+            {
+              "mean_distance": 6.999,
+              "q": 7,
+              "score": 0.16754686860662846,
+              "theta": 3.7491776184519754
+            },
+            {
+              "mean_distance": 7.1977,
+              "q": 8,
+              "score": 0.16209441761485482,
+              "theta": 3.6787051673719917
+            },
+            {
+              "mean_distance": 7.081622222222222,
+              "q": 9,
+              "score": 0.15166284322757811,
+              "theta": 3.7197257542439504
+            },
+            {
+              "mean_distance": 7.84806,
+              "q": 10,
+              "score": 0.1517609477851548,
+              "theta": 3.455865097045203
+            },
+            {
+              "mean_distance": 8.559163636363637,
+              "q": 11,
+              "score": 0.1538015063279795,
+              "theta": 3.223616429434082
+            }
+          ],
+          "center_rule": "kemeny",
+          "label": "NOISE-K",
+          "mean_distance": 7.15368,
+          "method_prefix": [
+            "GuidedBackprop",
+            "DeepLiftShap",
+            "DeepLift",
+            "FeatureAblation",
+            "Occlusion"
+          ],
+          "q": 5,
+          "score": 0.17978328343698355,
+          "theta": 3.694213138260613
+        },
+        "spearman": {
+          "candidates": [
+            {
+              "mean_distance": 5.7148,
+              "q": 2,
+              "score": 0.17106650562199358,
+              "theta": 4.239551141306414
+            },
+            {
+              "mean_distance": 5.364533333333333,
+              "q": 3,
+              "score": 0.17144264984975993,
+              "theta": 4.386416970682772
+            },
+            {
+              "mean_distance": 7.57135,
+              "q": 4,
+              "score": 0.17698867870003365,
+              "theta": 3.5493101601876313
+            },
+            {
+              "mean_distance": 7.84256,
+              "q": 5,
+              "score": 0.1725124644816559,
+              "theta": 3.457704203602413
+            },
+            {
+              "mean_distance": 7.984733333333334,
+              "q": 6,
+              "score": 0.17077511711592105,
+              "theta": 3.41038990331404
+            },
+            {
+              "mean_distance": 7.933228571428572,
+              "q": 7,
+              "score": 0.16959468443361053,
+              "theta": 3.42747656690214
+            },
+            {
+              "mean_distance": 8.03735,
+              "q": 8,
+              "score": 0.1646068064433337,
+              "theta": 3.3929959558645884
+            },
+            {
+              "mean_distance": 7.952066666666667,
+              "q": 9,
+              "score": 0.15760717084954143,
+              "theta": 3.421220053318015
+            },
+            {
+              "mean_distance": 8.65292,
+              "q": 10,
+              "score": 0.16026894087263718,
+              "theta": 3.193735389727368
+            },
+            {
+              "mean_distance": 9.335672727272728,
+              "q": 11,
+              "score": 0.16031215664081383,
+              "theta": 2.980400184938617
+            }
+          ],
+          "center_rule": "borda",
+          "label": "NOISE-S",
+          "mean_distance": 7.57135,
+          "method_prefix": [
+            "GuidedBackprop",
+            "DeepLiftShap",
+            "DeepLift",
+            "FeatureAblation"
+          ],
+          "q": 4,
+          "score": 0.17698867870003365,
+          "theta": 3.5493101601876313
+        }
+      },
+      "model": "imagenet100-resnet18",
+      "ordered_methods": [
+        "GuidedBackprop",
+        "DeepLiftShap",
+        "DeepLift",
+        "FeatureAblation",
+        "Occlusion",
+        "GradientShap",
+        "IntegratedGradients",
+        "Saliency",
+        "InputXGradient",
+        "Deconvolution",
+        "LRP"
+      ],
+      "q_K": 5,
+      "q_S": 4,
+      "source": {
+        "base_phase2_manifest_content_digest": "944d5b07acbb5a05713d413b30698ce2817c4000733677f3693422d23d2dc732",
+        "base_phase2_task_digest": "69b15c38b163151d30f54ae3715340298948cb87251807887606ca8014125b49",
+        "individual_clean_f_digest": "906be74aa095321eb46bf4d537716bc5c6428c6972f76a6c87e57b59fe714c2b",
+        "prefix_manifest_content_digest": "af9822f1b17b1557a4a28c0251ed3fa45ee75265680723811a44f70a4d924a91",
+        "prefix_task_digest": "c592fa33602b3c81117d67494b4532d79e6ba8f9696ec99cacc89ca44aad3d2e",
+        "source_digest": "95f7223743e1c98a035e5159be341fab14b3527e0e9d281127b7cf7ba7e99532"
+      }
+    },
+    {
+      "cell": "imagenet100--imagenet100-vit-b16",
+      "dataset": "imagenet100",
+      "geometries": {
+        "kendall": {
+          "candidates": [
+            {
+              "mean_distance": 2.3547,
+              "q": 2,
+              "score": 0.08229726310465575,
+              "theta": 6.116131002358133
+            },
+            {
+              "mean_distance": 6.8206,
+              "q": 3,
+              "score": 0.0834755306147096,
+              "theta": 3.8135243987302303
+            },
+            {
+              "mean_distance": 9.35465,
+              "q": 4,
+              "score": 0.08346892574478063,
+              "theta": 2.974566005854565
+            },
+            {
+              "mean_distance": 10.09816,
+              "q": 5,
+              "score": 0.0815688768510691,
+              "theta": 2.749214167889061
+            },
+            {
+              "mean_distance": 10.883466666666667,
+              "q": 6,
+              "score": 0.07806436945428138,
+              "theta": 2.516239928709976
+            },
+            {
+              "mean_distance": 10.7066,
+              "q": 7,
+              "score": 0.0792862393627061,
+              "theta": 2.5683941957341077
+            },
+            {
+              "mean_distance": 11.31235,
+              "q": 8,
+              "score": 0.07784930547954437,
+              "theta": 2.3902439194904694
+            },
+            {
+              "mean_distance": 11.605422222222222,
+              "q": 9,
+              "score": 0.07372544781275497,
+              "theta": 2.304354440536546
+            },
+            {
+              "mean_distance": 11.575,
+              "q": 10,
+              "score": 0.061029616281658955,
+              "theta": 2.313267482874327
+            },
+            {
+              "mean_distance": 12.128472727272728,
+              "q": 11,
+              "score": 0.056599387252900785,
+              "theta": 2.1509804648315924
+            }
+          ],
+          "center_rule": "kemeny",
+          "label": "NOISE-K",
+          "mean_distance": 6.8206,
+          "method_prefix": [
+            "GradientAttentionRollout",
+            "CheferTransformerAttribution",
+            "Occlusion"
+          ],
+          "q": 3,
+          "score": 0.0834755306147096,
+          "theta": 3.8135243987302303
+        },
+        "spearman": {
+          "candidates": [
+            {
+              "mean_distance": 2.3547,
+              "q": 2,
+              "score": 0.08229726310465575,
+              "theta": 6.116131002358133
+            },
+            {
+              "mean_distance": 9.873,
+              "q": 3,
+              "score": 0.07375113970629715,
+              "theta": 2.8168560002690883
+            },
+            {
+              "mean_distance": 11.1934,
+              "q": 4,
+              "score": 0.07798212009950835,
+              "theta": 2.425138187325228
+            },
+            {
+              "mean_distance": 11.42964,
+              "q": 5,
+              "score": 0.0808812057472564,
+              "theta": 2.3558604723412033
+            },
+            {
+              "mean_distance": 11.829466666666667,
+              "q": 6,
+              "score": 0.07856005253659303,
+              "theta": 2.238705149232686
+            },
+            {
+              "mean_distance": 11.773857142857143,
+              "q": 7,
+              "score": 0.07834614789396409,
+              "theta": 2.2550031181529446
+            },
+            {
+              "mean_distance": 12.2524,
+              "q": 8,
+              "score": 0.07436982717051234,
+              "theta": 2.1145507119980147
+            },
+            {
+              "mean_distance": 12.438511111111112,
+              "q": 9,
+              "score": 0.07189967506412516,
+              "theta": 2.059726639210158
+            },
+            {
+              "mean_distance": 12.39464,
+              "q": 10,
+              "score": 0.06570591353276105,
+              "theta": 2.0726642405682307
+            },
+            {
+              "mean_distance": 12.90249090909091,
+              "q": 11,
+              "score": 0.06332917648851485,
+              "theta": 1.9221935743512195
+            }
+          ],
+          "center_rule": "borda",
+          "label": "NOISE-S",
+          "mean_distance": 2.3547,
+          "method_prefix": [
+            "GradientAttentionRollout",
+            "CheferTransformerAttribution"
+          ],
+          "q": 2,
+          "score": 0.08229726310465575,
+          "theta": 6.116131002358133
+        }
+      },
+      "model": "imagenet100-vit-b16",
+      "ordered_methods": [
+        "GradientAttentionRollout",
+        "CheferTransformerAttribution",
+        "Occlusion",
+        "IntegratedGradients",
+        "PartialLRP",
+        "GradientShap",
+        "AttentionGradCAM",
+        "FeatureAblation",
+        "Saliency",
+        "InputXGradient",
+        "FullLRP"
+      ],
+      "q_K": 3,
+      "q_S": 2,
+      "source": {
+        "base_phase2_manifest_content_digest": "1cc83d41a14f32967bdcc84f4e92061bc6714ca8cdcd983588c83b622f95c72d",
+        "base_phase2_task_digest": "6d8737fa681fd47a1f5891dbaa56707d6a7bc715fa190dee7d664a5d94050717",
+        "individual_clean_f_digest": "5cdf63f73ec5c214225f34bb400490fa31f8c2439b82809539e14d0737db2d31",
+        "prefix_manifest_content_digest": "5efc1960242ef1025dca76e9582968fd26c4e1438c26f49e2697a261fc2d230e",
+        "prefix_task_digest": "5eb91330c31edb37e5140341f190caa49ef8ec64dc84bd863a39fd79f274a5c4",
+        "source_digest": "de7771d0c18e4c4e0ba47a7f1929558d834229bf8317b702fc2a550e1683b291"
+      }
+    }
+  ],
+  "experiment_id": "independent-geometry-noise-v1",
+  "schema": "simple-independent-geometry-noise-selector-v1",
+  "schema_version": 1,
+  "science": {
+    "distance": "johnson_graph_half_symmetric_difference",
+    "geometry_to_center_rule": {
+      "kendall": "kemeny",
+      "spearman": "borda"
+    },
+    "k": 20,
+    "method_order": "descending_individual_clean_F_then_method_id",
+    "patch_size": 16,
+    "q_values": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "selection": "per_geometry_maximum_anchored_score_smallest_q_tie",
+    "shared_q_across_geometries": false,
+    "shared_q_within_geometry_across_reported_aggregation_rules": true,
+    "theta_fit": "exact_fixed_size_subset_mallows_mle",
+    "utility_mark": "per_sample_individual_clean_F_contribution"
+  },
+  "scope": "post_hoc_complete_test_set_independent_geometry_boundary_experiment",
+  "selection_input_contract": {
+    "base_tensor_roles_read": [
+      "indices",
+      "labels",
+      "unmasked_predictions",
+      "individual_ranks",
+      "individual_removed_predictions_for_clean_F_marks",
+      "q11_borda_and_kemeny_ranks"
+    ],
+    "prefix_tensor_roles_read": [
+      "indices",
+      "borda_and_kemeny_top_patch_indices"
+    ],
+    "q_level_aggregate_metrics_read": false,
+    "q_level_masked_predictions_read": false,
+    "q_sweep_summary_accepted": false
+  },
+  "selection_source_digest": "44c913f63749a85f432979b9292c491838cab81360a0dfccb86a4d18763ca8d5",
+  "selector_digest": "031527091bf547e69b2615ab6493c1d8073dc66e52f0ce65b4a0223c9a359a5f",
+  "status": "complete",
+  "sweep_digest": "7cb8757a79406df633447013d4c4eb848b98a6973d9fc2401bf4a82102bda036",
+  "sweep_id": "paper-noise-prefix-sweep-v1"
+}

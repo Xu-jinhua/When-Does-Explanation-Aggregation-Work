@@ -1,0 +1,79 @@
+schema_version: 1
+assumption_id: paper-assumptions-full-v2
+base_config: paper-main.yaml
+
+# This namespace is intentionally disjoint from paper-main-v2. The current
+# NAIVE queue and immutable Phase 1/2 artifacts are read-only inputs here.
+storage:
+  # Full-grid IND uses new partitions, checkpoints and attribution identities.
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-assumptions-full-v2/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-assumptions-full-v2/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/paper-assumptions-full-v2
+  spool_max_gib: 96
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/paper-assumptions-full-v2/jobs.sqlite3
+  log_directory: ./runs/paper-assumptions-full-v2/logs
+  gpu_ids: [0]
+  inference_batch_size: 512
+  # Identity-bound baseline. The active scheduler may use the documented
+  # execution-only --headroom-fraction override without changing this queue.
+  headroom_fraction: 0.10
+  max_retries: 1
+  cpu_workers: 2
+  # Source training and each source Phase 1 scope are exclusive. A Phase 1
+  # scope generates all methods and therefore includes FA/Occlusion.
+  # 39.5 GiB plus 10% headroom fits the measured 47,676,129,280-byte L40S.
+  training_reservation_gib: {cnn: 39.5, vit: 39.5}
+  phase1_reservation_gib: {cnn: 39.5, vit: 39.5}
+  selection_reservation_gib: 12
+  rank_reservation_gib: 12
+  evaluation_reservation_gib: 10
+  # Reuse the completed main-run profile selections. These caps are the
+  # largest measured successful values, not conservative fallback batches.
+  phase1_batch_caps:
+    IntegratedGradients: 32
+    FeatureAblation: 1024
+    Occlusion: 1024
+    GradientShap: 64
+    DeepLiftShap: 64
+    PartialLRP: 128
+    FullLRP: 128
+
+training:
+  train_split: train
+  validation_split: validation
+  epochs: 100
+  batch_size: {cnn: 128, vit: 128}
+  validation_batch_size: {cnn: 128, vit: 128}
+  precision: bf16
+  class_balance:
+    default: none
+    dermamnist-resnet18: balanced_sampler
+
+selection:
+  alpha: 0.05
+  bootstrap_replicates: 499
+  min_prefix: 2
+  selection_rule: largest_not_rejected
+  # p=16 on 224x224 gives 14x14=196 rank items. This artifact is generated
+  # once by the prepare job and is not a runtime resource calibration.
+  # The implementation derives a versioned local v2 path from this stable
+  # configuration path; the earlier schema-2 file remains immutable.
+  spearman_artifact: ./runs/paper-assumptions-full-v2/statistics/spearman-mallows-p196.npz
+  spearman_calibration_config: ../pilots/noise_gof_cost.yaml
+
+science:
+  partition_families: 3
+  matched_source_selection: all
+  split: test
+  patch_size: 16
+  k: 20
+  assignment_seed: 20260714

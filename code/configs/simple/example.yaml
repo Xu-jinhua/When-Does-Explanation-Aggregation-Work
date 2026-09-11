@@ -1,0 +1,84 @@
+schema_version: 1
+experiment_id: paper-main-v1
+precision: fp32
+seed: 20260714
+methods_file: methods.yaml
+
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-main-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-main-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+
+runtime:
+  profile_directory: ./runs/paper-main-v1/profiles
+  database_path: ./runs/paper-main-v1/jobs.sqlite3
+  log_directory: ./runs/paper-main-v1/logs
+  gpu_ids: [0]
+  search_grid: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+  default_profile_start: 256
+  shard_size: 512
+  prediction_batch_size: 512
+  dataloader_workers: 8
+  headroom_fraction: 0.10
+  max_retries: 1
+
+datasets:
+  - id: imagenet1k
+    registry_key: imagenet1k
+    # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
+    manifest_path: /path/to/imagenet1k.manifest.json
+    splits: [test]
+    # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
+    cache_directory: /path/to/ilsvrc2012
+    keep_provider_in_memory: false
+    cache_images_in_ram: false
+
+models:
+  - id: imagenet1k-resnet18
+    dataset: imagenet1k
+    model_key: resnet18
+    architecture: cnn
+    num_classes: 1000
+    init_mode: checkpoint
+    # Placeholder: train with `xai-exp phase0 train` (see docs/).
+    checkpoint_path: /path/to/resnet18/checkpoint.pt
+    strict_checkpoint: true
+    # The raw [0,1] train mean is model-specific because resize/crop preprocessing differs.
+    # Placeholder: generate with `xai-exp phase0 compute-means` (see docs/).
+    mean_path: /path/to/imagenet1k/resnet18/train-image-mean
+    mean_key: dataset_mean
+
+  - id: imagenet1k-vit-b16
+    dataset: imagenet1k
+    model_key: vit_base_patch16_224
+    architecture: vit
+    num_classes: 1000
+    init_mode: checkpoint
+    checkpoint_path: /path/to/vit-b16/checkpoint.pt
+    strict_checkpoint: true
+    mean_path: /path/to/imagenet1k/vit-b16/train-image-mean
+    mean_key: dataset_mean
+
+conditions:
+  - id: clean
+    kind: clean
+
+phase2:
+  # NAIVE, IND, and NOISE use p=16; add p=8 or p=14 only for patch-size ablations.
+  patch_sizes: [16]
+  primary_patch_size: 16
+  k: 20
+  inference_batch_size: 512
+  simpleavg_normalization: minmax
+  rrf_c: 60
+  kemeny_starts: 1
+  kemeny_max_passes: 1024
+  ensembles:
+    - id: all-paper-methods
+      methods: architecture_default
+      rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
+      include_singles: true

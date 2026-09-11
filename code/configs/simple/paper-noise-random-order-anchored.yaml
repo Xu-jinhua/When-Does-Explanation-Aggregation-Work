@@ -1,0 +1,48 @@
+schema_version: 1
+study_id: paper-noise-random-order-anchored-v1
+noise_prefix_config: paper-noise-prefix-sweep.yaml
+independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/independent-geometry-noise-v1/selector.json
+
+# This mechanism audit reuses the immutable p=16 clean rank bank. It changes
+# only the method order and applies the same anchored q selector as NOISE.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-noise-random-order-anchored-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-noise-random-order-anchored-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/paper-noise-random-order-anchored-v1
+  spool_max_gib: 64
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/paper-noise-random-order-anchored-v1/jobs.sqlite3
+  log_directory: ./runs/paper-noise-random-order-anchored-v1/logs
+  shared_cache_root: ./runs/paper-noise-random-order-anchored-v1/shared-cache
+  gpu_ids: [0]
+  inference_batch_size: 512
+  selection_reservation_gib: 16
+  evaluation_reservation_gib: 20
+  aggregation_workspace_gib: 2
+  headroom_fraction: 0.05
+  max_retries: 1
+  cpu_workers: 3
+
+science:
+  split: test
+  patch_size: 16
+  k: 20
+  cells: [dermamnist--dermamnist-resnet18]
+  conditions: [clean]
+  geometries: [spearman, kendall]
+  rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
+  control_mode: random_order_anchored
+  q_values: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  random_order_count: 10
+  random_seed: 20260810
+  fit_policy: exact_fixed_size_subset_mallows_mle
+  candidate_policy: fixed_seed_unique_random_method_permutations
+  selection_policy: per_permutation_per_geometry_maximum_anchored_score_smallest_q_tie

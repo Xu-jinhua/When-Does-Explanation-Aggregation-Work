@@ -1,0 +1,42 @@
+schema_version: 1
+study_id: paper-relative-robustness-v1
+base_config: paper-main.yaml
+noise_prefix_config: paper-noise-prefix-sweep.yaml
+
+# This is a disjoint Phase-2-only control namespace. It reads existing
+# rank-ready inputs, adversarial inputs, and completed NAIVE/NOISE evaluations.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/paper-relative-robustness-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/paper-relative-robustness-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/paper-relative-robustness-v1
+  spool_max_gib: 96
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/paper-relative-robustness-v1/jobs.sqlite3
+  log_directory: ./runs/paper-relative-robustness-v1/logs
+  shared_cache_root: ./runs/paper-assumptions-compact-v1/shared-cache
+  gpu_ids: [0]
+  inference_batch_size: 512
+  control_reservation_gib: 16
+  headroom_fraction: 0.05
+  max_retries: 1
+  cpu_workers: 3
+
+science:
+  split: test
+  patch_size: 16
+  k: 20
+  # A fixed bank is shared across clean and all perturbations for each image.
+  random_seed: 20260714
+  random_seed_count: 8
+  bootstrap_replicates: 19999
+  bootstrap_batch_size: 32
+  confidence: 0.95
+  independent_noise_summary: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/independent-geometry-noise-v1/summary.json

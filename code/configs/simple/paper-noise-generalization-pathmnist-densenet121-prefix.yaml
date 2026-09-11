@@ -1,0 +1,38 @@
+schema_version: 1
+sweep_id: noise-generalization-pathmnist-densenet121-prefix-v1
+assumptions_config: paper-noise-generalization-pathmnist-densenet121-assumptions.yaml
+
+# This is a read-only q=2..11 consumer of the base NAIVE ranks and the
+# Oracle-NOISE selection manifests.  It has its own queue and output root.
+storage:
+  # Local filesystem mode: the first path segment contains no ':', so the
+  # built-in local backend is used; the path is then relative to the working
+  # directory. For an rclone remote write 'remote:path'.
+  remote_root: ./runs/noise-generalization-pathmnist-densenet121-prefix-v1/remote
+  # Relative filesystem paths resolve against this file's directory.
+  scratch_root: ./runs/noise-generalization-pathmnist-densenet121-prefix-v1/scratch
+  # rclone_binary is optional; the loader discovers rclone on PATH.
+  spool_root: /dev/shm/xai-simple/noise-generalization-pathmnist-densenet121-prefix-v1
+  spool_max_gib: 96
+  # Lowered for small-disk environments; production servers should use >=32.
+  spool_min_free_gib: 2
+
+runtime:
+  database_path: ./runs/noise-generalization-pathmnist-densenet121-prefix-v1/jobs.sqlite3
+  log_directory: ./runs/noise-generalization-pathmnist-densenet121-prefix-v1/logs
+  input_catalog_path: ./runs/noise-generalization-pathmnist-densenet121-prefix-v1/input-catalog.json
+  shared_cache_root: ./runs/noise-generalization-pathmnist-densenet121-v1/shared-cache
+  gpu_ids: [0]
+  inference_batch_size: 512
+  evaluation_reservation_gib: 12
+  aggregation_workspace_gib: 2
+  headroom_fraction: 0.05
+  max_retries: 1
+  cpu_workers: 3
+
+science:
+  split: test
+  patch_size: 16
+  k: 20
+  q_values: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  rules: [SimpleAvg, Borda, RRF, Kemeny, Schulze]
