@@ -1,6 +1,6 @@
 # Results
 
-The dataset-level collection contains 14 PDF reports with 705 non-empty result
+The dataset-level collection contains 14 PDF reports with 711 non-empty result
 tables. Each report is distributed with its directly compilable LaTeX source;
 the complete inventory is recorded in `latex/RESULT_MANIFEST.json`.
 

@@ -26,7 +26,7 @@ The experimental results are organized as dataset-level reports. Each report
 collects the released model and aggregation-setting results for one dataset;
 the compiled PDF and its LaTeX source are published together.
 
-| Dataset | Models represented in the archive | PDF report | LaTeX source |
+| Dataset | Models represented in the collection | PDF report | LaTeX source |
 |:--|:--|:--|:--|
 | ImageNet | DenseNet-121, ResNet-18, ViT-B/16 | [PDF](results/pdf/by-dataset/imagenet.pdf) | [source](results/latex/by-dataset/imagenet/) |
 | DermaMNIST | DenseNet-121, EfficientNet-B0, MobileNetV3-Large, ResNet-18, ResNet-50, ViT-B/16 | [PDF](results/pdf/by-dataset/dermamnist.pdf) | [source](results/latex/by-dataset/dermamnist/) |
@@ -43,14 +43,13 @@ the compiled PDF and its LaTeX source are published together.
 | RetinaMNIST | DenseNet-121, EfficientNet-B0, MobileNetV3-Large, ResNet-18, ResNet-50, ViT-B/16 | [PDF](results/pdf/by-dataset/retinamnist.pdf) | [source](results/latex/by-dataset/retinamnist/) |
 | TissueMNIST | DenseNet-121, EfficientNet-B0, MobileNetV3-Large, ResNet-18, ResNet-50, ViT-B/16 | [PDF](results/pdf/by-dataset/tissuemnist.pdf) | [source](results/latex/by-dataset/tissuemnist/) |
 
-The generated reports currently contain 705 non-empty tables covering 14
-datasets and only the dataset/model rows present in the released source
-files. Results from current snapshots, historical experiment versions, and
-real-checkpoint compatibility diagnostics are retained together. Compatibility
-tables are explicitly archival checks, not completed Phase 2 quality or
-robustness metrics; the reports do not claim complete coverage for every
-possible dataset/model combination. Counts, source paths, versions, and
-empty-source records are listed in
+The generated reports currently contain 711 non-empty tables covering 14
+datasets and the dataset/model rows present in the released source files.
+Available experiment versions and real-checkpoint compatibility diagnostics are
+retained together. Compatibility tables are execution checks, not completed
+Phase 2 quality or robustness metrics; the reports do not claim complete
+coverage for every possible dataset/model combination. Counts, source paths,
+versions, and empty-source records are listed in
 [`results/latex/README.md`](results/latex/README.md) and
 [`results/latex/RESULT_MANIFEST.json`](results/latex/RESULT_MANIFEST.json).
 
@@ -185,9 +184,9 @@ This repository supersedes our ESANN project
 [*Theoretical Insights into Ensemble Strategies for Image Post-Hoc Explanation*](https://github.com/Xu-jinhua/Theoretical-Ensemble-Strategies-for-XAI).
 The ESANN study introduced the ensemble strategies; the present work keeps its
 locked explanation-method parameters and evaluates *when* rank aggregation of
-explanations works. The released archive spans 14 datasets and preserves
-historical dataset/model combinations, with formal metric tables and separate
-compatibility diagnostics where a run stopped before Phase 2.
+explanations works. The released collection spans 14 datasets and includes
+available dataset/model combinations, formal metric tables, and compatibility
+diagnostics where a run stopped before Phase 2.
 
 ## License
 
