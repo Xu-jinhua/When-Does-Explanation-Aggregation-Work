@@ -135,17 +135,17 @@ Every paper experiment is a versioned YAML configuration under
 [`code/configs/simple/`](code/configs/simple/), executed through one
 `xai-exp` command group:
 
-| Paper artifact | Configuration | [PDF](results/pdf/by-dataset/paperartifact.pdf) | Command group |
+| Paper artifact | Configuration | Command group |
 |:--|:--|:--|
-| Table 1 (main NAIVE results) | `paper-main.yaml` | [PDF](results/pdf/by-dataset/table1(mainnaiveresults).pdf) | `xai-exp simple run --include-phase2`, then `xai-exp simple summarize` |
-| Tables 2, 4, 5 (k, fill, noise-strength ablations) | `paper-naive-ablations.yaml` | [PDF](results/pdf/by-dataset/tables2,4,5(k,fill,noise-strengthablations).pdf) | `xai-exp simple ablation` |
-| IND, NAIVE, and NOISE assumption tables | `paper-assumptions.yaml` | [PDF](results/pdf/by-dataset/ind,naive,andnoiseassumptiontables.pdf) | `xai-exp simple assumptions` |
-| NOISE Fidelity-prefix sweep (q = 2..11) | `paper-noise-prefix-sweep.yaml` | [PDF](results/pdf/by-dataset/noisefidelity-prefixsweep(q=2..11).pdf) | `xai-exp simple noise-prefix` |
-| NOISE generalization cell (PathMNIST / DenseNet-121) | `paper-noise-generalization-pathmnist-densenet121{,-assumptions,-prefix}.yaml` | [PDF](results/pdf/by-dataset/noisegeneralizationcell(pathmnist/densenet-121).pdf) | `xai-exp simple`, `xai-exp simple assumptions`, `xai-exp simple noise-prefix` |
-| Random-subset mechanism audit | `paper-noise-random-subset.yaml`, `paper-noise-random-subset-v2.yaml` | [PDF](results/pdf/by-dataset/random-subsetmechanismaudit.pdf) | `xai-exp simple noise-subset` |
-| Random-order anchored control | `paper-noise-random-order-anchored.yaml` | [PDF](results/pdf/by-dataset/random-orderanchoredcontrol.pdf) | `xai-exp simple noise-subset` |
-| Relative robustness (null-anchored R_rel) | `paper-relative-robustness.yaml` | [PDF](results/pdf/by-dataset/relativerobustness(null-anchoredr_rel).pdf) | `xai-exp simple relative-robustness` |
-| Matrix planning and compatibility archive | `full-matrix.yaml` | [PDF](results/pdf/by-dataset/matrixplanningandcompatibilityarchive.pdf) | `xai-exp simple full-matrix` (requires `--confirm-full-matrix`) |
+| Table 1 (main NAIVE results) | `paper-main.yaml` | `xai-exp simple run --include-phase2`, then `xai-exp simple summarize` |
+| Tables 2, 4, 5 (k, fill, noise-strength ablations) | `paper-naive-ablations.yaml` | `xai-exp simple ablation` |
+| IND, NAIVE, and NOISE assumption tables | `paper-assumptions.yaml` | `xai-exp simple assumptions` |
+| NOISE Fidelity-prefix sweep (q = 2..11) | `paper-noise-prefix-sweep.yaml` | `xai-exp simple noise-prefix` |
+| NOISE generalization cell (PathMNIST / DenseNet-121) | `paper-noise-generalization-pathmnist-densenet121{,-assumptions,-prefix}.yaml` | `xai-exp simple`, `xai-exp simple assumptions`, `xai-exp simple noise-prefix` |
+| Random-subset mechanism audit | `paper-noise-random-subset.yaml`, `paper-noise-random-subset-v2.yaml` | `xai-exp simple noise-subset` |
+| Random-order anchored control | `paper-noise-random-order-anchored.yaml` | `xai-exp simple noise-subset` |
+| Relative robustness (null-anchored R_rel) | `paper-relative-robustness.yaml` | `xai-exp simple relative-robustness` |
+| Matrix planning and compatibility archive | `full-matrix.yaml` | `xai-exp simple full-matrix` (requires `--confirm-full-matrix`) |
 
 Each configuration declares an isolated storage namespace. To reproduce a
 study on your own infrastructure, point `storage.remote_root` and the
