@@ -108,7 +108,9 @@ MODEL_LABELS = {
 # many more columns than fit on one page, so wide exports are rendered as
 # horizontally adjacent panels.  Anchor columns are repeated in every panel
 # so that a panel remains interpretable when it starts on a new page.
-TABLE_PANEL_MAX_COLUMNS = 21
+# Keep each landscape panel comfortably inside the printable width.  A lower
+# panel limit also leaves enough room for metric headers and long text cells.
+TABLE_PANEL_MAX_COLUMNS = 18
 TABLE_ANCHOR_COLUMNS = (
     "cell",
     "dataset",
@@ -137,6 +139,55 @@ TABLE_LONG_TEXT_COLUMNS = {
     "manifest_content_digest",
     "manifest_assumption_digest",
     "error",
+}
+
+# Preferred content widths for the fixed-width landscape panels.  The widths
+# are scaled down when a panel contains many text columns, so the generated
+# table stays inside the printable landscape area instead of relying on an
+# overfull ``c`` column or an unbounded paragraph column.
+TABLE_COLUMN_WIDTHS_CM = {
+    "cell": 3.00,
+    "dataset": 1.80,
+    "model": 2.35,
+    "architecture": 1.65,
+    "split": 1.25,
+    "method": 2.35,
+    "setting": 1.90,
+    "condition": 2.15,
+    "condition_label": 2.15,
+    "selected_individual": 2.40,
+    "selected_method": 2.40,
+    "selected_sources": 2.40,
+    "selected_methods": 2.40,
+    "ordered_methods": 2.40,
+    "reference_methods": 2.40,
+    "distance_model": 1.55,
+    "scope": 1.85,
+    "rule": 2.00,
+    "selection_rule": 2.00,
+    "geometry": 1.25,
+    "geometry_label": 1.60,
+}
+TABLE_DEFAULT_TEXT_WIDTH_CM = 1.45
+TABLE_LONG_TEXT_WIDTH_CM = 2.35
+TABLE_NUMERIC_WIDTH_CM = 0.95
+TABLE_MIN_TEXT_WIDTH_CM = 0.92
+TABLE_MIN_NUMERIC_WIDTH_CM = 0.78
+# A4 landscape with the report preamble's 1.5 cm margins has about 26.7 cm of
+# line width.  Leave room for inter-column spacing and vertical rules.
+TABLE_CONTENT_WIDTH_CM = 24.55
+
+# These fields belong to execution diagnostics rather than the reported
+# experiment metrics.  They make compatibility tables unnecessarily wide and
+# duplicate information that is not part of the result tables.
+TABLE_HIDDEN_COLUMNS = {
+    "error",
+    "status",
+    "repeat",
+    "result_status",
+    "gate_status",
+    "passed",
+    "deterministic_repeat",
 }
 
 @dataclass(frozen=True)
@@ -361,6 +412,9 @@ def latex_escape(value: Any) -> str:
 def public_name(value: str) -> str:
     """Remove internal historical labels from public table text."""
     text = str(value)
+    text = re.sub(r"(?i)\bESANN archive\b", "additional result", text)
+    text = re.sub(r"(?i)\b(random subset|random order) archive\b", r"\1", text)
+    text = re.sub(r"(?i)\bNOISE stability archive\b", "NOISE stability", text)
     text = re.sub(
         r"(?i)full[-_ ]*(?:\d+[-_ ]*)?(?:cell[-_ ]*)?matrix",
         "released scope",
@@ -597,7 +651,7 @@ def experiment_for(source: SourceSpec, path: Path) -> str:
             return "released scope"
     if source.key in {"signed_r_v2", "esann_archive"}:
         if source.key == "esann_archive":
-            return "ESANN archive"
+            return "additional result"
         if "q-sweep" in rel:
             return "NOISE q-sweep"
         if "effective-robustness" in rel:
@@ -609,7 +663,7 @@ def experiment_for(source: SourceSpec, path: Path) -> str:
         if "analysis" in path.name:
             return "main comparison analysis"
         if "oracle" in path.name.lower():
-            return "NOISE stability archive"
+            return "NOISE stability"
     if source.key == "naive_ablations":
         table = next((part for part in path.parts if part.lower().startswith("table_")), "NAIVE")
         return f"NAIVE {table.replace('_', ' ')}"
@@ -618,9 +672,9 @@ def experiment_for(source: SourceSpec, path: Path) -> str:
             return "NOISE preview"
         return "NOISE q-sweep diagnostics"
     if source.key == "random_subset":
-        return "random subset archive"
+        return "random subset"
     if source.key == "random_order":
-        return "random order archive"
+        return "random order"
     if source.key == "mallows":
         return "NOISE selector diagnostics"
     if source.key == "pathmnist_generalization":
@@ -1054,14 +1108,298 @@ def collect_records() -> list[TableRecord]:
 
 def table_caption(record: TableRecord) -> str:
     coverage = f"{display_dataset(record.dataset)}--{display_model(record.model)}"
-    return f"{coverage} results."
+    return coverage
+
+
+def is_hidden_column(column: str) -> bool:
+    """Return whether a diagnostic-only source field should be rendered."""
+    token = re.sub(r"[^a-z0-9]+", "_", str(column).strip().lower()).strip("_")
+    if token in TABLE_HIDDEN_COLUMNS:
+        return True
+    # Keep variants such as error_message and deterministic_repeat_check out
+    # of the public tables as well.
+    return (
+        token.startswith("error_")
+        or token.endswith("_error")
+        or token.endswith("_repeat")
+        or token.startswith("repeat_")
+    )
+
+
+def _metric_tex(metric: str) -> str:
+    return {
+        "f": "F",
+        "fbar": r"\bar{F}",
+        "c": "C",
+        "cbar": r"\bar{C}",
+    }[metric.lower()]
+
+
+def _math_header(column: str) -> str | None:
+    """Render metric-like headers with explicit inline math notation."""
+    token = re.sub(r"\s+", "_", str(column).strip())
+    simple_metric = re.fullmatch(r"(Fbar|Cbar|F|C)(?:_q)?", token, flags=re.IGNORECASE)
+    if simple_metric:
+        metric = _metric_tex(simple_metric.group(1))
+        return r"\(\scriptstyle " + metric + (r"(q)" if token.lower().endswith("_q") else "") + r"\)"
+
+    quality = r"(Fbar|Cbar|F|C)"
+    robustness = re.fullmatch(
+        rf"(ER|R)_(?P<metric>{quality})(?:_(?P<geometry>[a-z]))?(?P<q>_q)?",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if robustness:
+        prefix = r"\mathrm{ER}" if robustness.group(1).upper() == "ER" else "R"
+        metric = _metric_tex(robustness.group("metric"))
+        geometry = robustness.group("geometry")
+        expression = prefix + "_{" + metric + "}"
+        if geometry:
+            expression += "^{" + geometry.lower() + "}"
+        if robustness.group("q"):
+            expression += "(q)"
+        return r"\(\scriptstyle " + expression + r"\)"
+
+    reversed_robustness = re.fullmatch(
+        rf"(R|ER)_(?P<geometry>[a-z])_(?P<metric>{quality})",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if reversed_robustness:
+        prefix = r"\mathrm{ER}" if reversed_robustness.group(1).upper() == "ER" else "R"
+        metric = _metric_tex(reversed_robustness.group("metric"))
+        geometry = reversed_robustness.group("geometry").lower()
+        return r"\(\scriptstyle " + prefix + "_{" + metric + "}^{" + geometry + r"}\)"
+
+    perturbed = re.fullmatch(
+        rf"(?P<metric>{quality})_(?P<kind>clean|perturbed)(?:_(?P<geometry>[a-z]))?",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if perturbed:
+        metric = _metric_tex(perturbed.group("metric"))
+        kind = perturbed.group("kind").lower()
+        expression = metric + r"_{\mathrm{" + kind + "}}"
+        geometry = perturbed.group("geometry")
+        if geometry:
+            expression += "^{" + geometry.lower() + "}"
+        return r"\(\scriptstyle " + expression + r"\)"
+
+    standard_deviation = re.fullmatch(
+        rf"sd_(?P<metric>{quality})_(?P<kind>clean|perturbed)(?:_(?P<geometry>[a-z]))?",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if standard_deviation:
+        metric = _metric_tex(standard_deviation.group("metric"))
+        kind = standard_deviation.group("kind").lower()
+        expression = r"\operatorname{SD}(" + metric + r"_{\mathrm{" + kind + "}}"
+        geometry = standard_deviation.group("geometry")
+        if geometry:
+            expression += "^{" + geometry.lower() + "}"
+        return r"\(\scriptstyle " + expression + r")\)"
+
+    standard_deviation_robustness = re.fullmatch(
+        rf"sd_(?P<prefix>ER|R)_(?P<metric>{quality})_(?P<geometry>[a-z])",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if standard_deviation_robustness:
+        prefix = (
+            r"\mathrm{ER}"
+            if standard_deviation_robustness.group("prefix").upper() == "ER"
+            else "R"
+        )
+        metric = _metric_tex(standard_deviation_robustness.group("metric"))
+        geometry = standard_deviation_robustness.group("geometry").lower()
+        expression = r"\operatorname{SD}(" + prefix + "_{" + metric + "}^{" + geometry + r"})"
+        return r"\(\scriptstyle " + expression + r"\)"
+
+    standard_deviation_metric = re.fullmatch(
+        rf"sd_(?P<metric>{quality})",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if standard_deviation_metric:
+        return r"\(\scriptstyle \operatorname{SD}(" + _metric_tex(standard_deviation_metric.group("metric")) + r")\)"
+
+    extended_robustness = re.fullmatch(
+        rf"(?P<prefix>ER|R)_(?P<metric>{quality})_(?P<condition>.+)",
+        token,
+        flags=re.IGNORECASE,
+    )
+    if extended_robustness:
+        prefix = (
+            r"\mathrm{ER}"
+            if extended_robustness.group("prefix").upper() == "ER"
+            else "R"
+        )
+        metric = _metric_tex(extended_robustness.group("metric"))
+        condition = public_name(extended_robustness.group("condition").replace("_", " "))
+        base = r"\(\scriptstyle " + prefix + "_{" + metric + r"}\)"
+        return r"\shortstack[l]{" + base + r"\\" + latex_escape(_title_word(condition)) + "}"
+
+    a0 = re.fullmatch(r"A0_(clean|perturbed)", token, flags=re.IGNORECASE)
+    if a0:
+        return r"\(\scriptstyle A_0^{\mathrm{" + a0.group(1).lower() + r"}}\)"
+
+    qnorm = re.fullmatch(r"Qnorm_(clean|perturbed)", token, flags=re.IGNORECASE)
+    if qnorm:
+        return r"\(\scriptstyle Q_{\mathrm{norm}}^{\mathrm{" + qnorm.group(1).lower() + r"}}\)"
+
+    if token.upper() in {"A", "G", "Q", "R", "ER"}:
+        return r"\(\scriptstyle " + token.upper() + r"\)"
+    return None
+
+
+def _title_word(word: str) -> str:
+    if not word:
+        return word
+    abbreviations = {
+        "a0": "A0",
+        "acc": "Acc",
+        "ci": "CI",
+        "cdf": "CDF",
+        "er": "ER",
+        "q": "Q",
+        "sd": "SD",
+    }
+    if word.lower() in abbreviations:
+        return abbreviations[word.lower()]
+    # Preserve established all-caps abbreviations while capitalising ordinary
+    # English header words.
+    if word.isupper() or (len(word) > 1 and word[0].isupper() and word[1:].islower()):
+        return word
+    return word[:1].upper() + word[1:]
 
 
 def column_label(column: str) -> str:
     label = public_name(column)
     label = label.replace("_", " ")
     label = re.sub(r"(?i)perturbed quality", "perturbed quality", label)
-    return label
+    return " ".join(_title_word(word) for word in label.split())
+
+
+def _humanise_identifier(value: str) -> str:
+    """Make a compact source identifier readable in a table cell."""
+    text = public_name(value)
+    if not text or text.startswith(("[", "{")):
+        return text
+    known = {
+        "best_individual": "Best Individual",
+        "best-individual": "Best Individual",
+        "simpleavg": "Simple Averaging",
+        "simple_avg": "Simple Averaging",
+        "simple-avg": "Simple Averaging",
+        "inputxgradient": "InputXGradient",
+        "guidedbackprop": "GuidedBackprop",
+        "deep_lift": "DeepLift",
+        "deep-lift": "DeepLift",
+        "deep_lift_shap": "DeepLiftShap",
+        "deep-lift-shap": "DeepLiftShap",
+        "feature_ablation": "FeatureAblation",
+        "feature-ablation": "FeatureAblation",
+        "integrated_gradients": "IntegratedGradients",
+        "integrated-gradients": "IntegratedGradients",
+        "borda": "Borda",
+        "kemeny": "Kemeny",
+        "rrf": "RRF",
+        "schulze": "Schulze",
+        "saliency": "Saliency",
+        "occlusion": "Occlusion",
+        "deconvolution": "Deconvolution",
+        "lrp": "LRP",
+        "gradientshap": "GradientShap",
+        "integratedgradients": "IntegratedGradients",
+        "featureablation": "FeatureAblation",
+        "test": "Test",
+        "train": "Train",
+        "validation": "Validation",
+        "spearman": "Spearman",
+        "kendall": "Kendall",
+    }
+    compact = re.sub(r"\s+", " ", text).strip().lower()
+    if compact in known:
+        return known[compact]
+    parts = [part for part in re.split(r"[_-]+", text) if part]
+    if len(parts) > 1 and not all(part.isupper() for part in parts):
+        return " ".join(_title_word(part) for part in parts)
+    return _title_word(text) if text.islower() else text
+
+
+def _display_architecture(value: str) -> str:
+    token = clean_token(value)
+    aliases = {
+        "cnn": "CNN",
+        "vit": "ViT",
+        "vit-b16": "ViT-B/16",
+        "resnet18": "ResNet-18",
+        "resnet-18": "ResNet-18",
+        "resnet50": "ResNet-50",
+        "resnet-50": "ResNet-50",
+        "densenet121": "DenseNet-121",
+        "densenet-121": "DenseNet-121",
+    }
+    return aliases.get(token, _humanise_identifier(value))
+
+
+def display_table_value(column: str, value: Any) -> str:
+    """Convert internal identifiers to stable public labels for table cells."""
+    text = json_cell(value)
+    if not text:
+        return ""
+    token = _column_token(column)
+    # Aggregate diagnostics often carry the dataset/model pair in a generic
+    # ``group_value`` or ``reference`` field rather than a dedicated cell
+    # column.  Apply the same public labels whenever that pair is explicit.
+    pair_dataset, pair_model = split_cell(text)
+    if pair_dataset and pair_model:
+        return f"{display_dataset(pair_dataset)}--{display_model(pair_model)}"
+    if token == "dataset":
+        dataset = normalise_dataset(text)
+        label = display_dataset(dataset)
+        return label if label != dataset else _humanise_identifier(text)
+    if token == "model":
+        if "--" in clean_token(text):
+            _, model = split_cell(text)
+            return display_model(model)
+        model = normalise_model(text)
+        label = display_model(model)
+        return label if label != model else _humanise_identifier(text)
+    if token == "cell":
+        dataset, model = split_cell(text)
+        if dataset and model:
+            return f"{display_dataset(dataset)}--{display_model(model)}"
+        return _humanise_identifier(text)
+    if token == "architecture":
+        return _display_architecture(text)
+    if token in {
+        "method",
+        "method_prefix",
+        "selected_method",
+        "excluded_method",
+        "reference_method",
+        "aggregation",
+        "setting",
+        "condition",
+        "condition_label",
+        "condition_kind",
+        "distance_model",
+        "geometry",
+        "geometry_label",
+        "group",
+        "group_dimension",
+        "group_value",
+        "measure",
+        "rule",
+        "selection_rule",
+        "scope",
+        "split",
+        "value_kind",
+        "outcome",
+    }:
+        return _humanise_identifier(text)
+    return public_name(text)
 
 
 def is_numeric_column(record: TableRecord, column: str) -> bool:
@@ -1080,6 +1418,7 @@ def is_numeric_column(record: TableRecord, column: str) -> bool:
 
 def panel_columns(columns: list[str]) -> list[list[str]]:
     """Split a wide export while repeating stable row identifiers."""
+    columns = [column for column in columns if not is_hidden_column(column)]
     anchors = [column for column in TABLE_ANCHOR_COLUMNS if column in columns]
     if not anchors and columns:
         anchors = [columns[0]]
@@ -1090,33 +1429,135 @@ def panel_columns(columns: list[str]) -> list[list[str]]:
 
 
 def table_column_spec(record: TableRecord, columns: list[str], numeric_columns: dict[str, bool]) -> str:
+    widths = table_column_widths(columns, numeric_columns)
     specs: list[str] = []
     for column in columns:
+        width = f"{widths[column]:.3f}cm"
         if numeric_columns.get(column, False):
-            specs.append("c")
-            continue
-        width = "1.45cm" if column in TABLE_LONG_TEXT_COLUMNS else "1.05cm"
-        specs.append(r">{\raggedright\arraybackslash}p{" + width + "}")
+            specs.append(r">{\centering\arraybackslash}p{" + width + "}")
+        else:
+            specs.append(r">{\raggedright\arraybackslash}p{" + width + "}")
     return "|" + "|".join(specs) + "|"
 
 
+def _column_token(column: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", str(column).strip().lower()).strip("_")
+
+
+def table_column_widths(columns: list[str], numeric_columns: dict[str, bool]) -> dict[str, float]:
+    """Allocate a bounded width to every column in one landscape panel.
+
+    Numeric columns are paragraph columns too, rather than unconstrained
+    ``c`` columns.  This makes the total width deterministic for wide result
+    exports while still allowing a numeric value to wrap if an unusual source
+    contains a long token.
+    """
+    widths: dict[str, float] = {}
+    for column in columns:
+        token = _column_token(column)
+        if numeric_columns.get(column, False):
+            widths[column] = TABLE_NUMERIC_WIDTH_CM
+        elif token in TABLE_COLUMN_WIDTHS_CM:
+            widths[column] = TABLE_COLUMN_WIDTHS_CM[token]
+        elif token in TABLE_LONG_TEXT_COLUMNS:
+            widths[column] = TABLE_LONG_TEXT_WIDTH_CM
+        else:
+            widths[column] = TABLE_DEFAULT_TEXT_WIDTH_CM
+
+    total = sum(widths.values())
+    if total <= TABLE_CONTENT_WIDTH_CM:
+        return widths
+
+    # Reduce the widest columns first, respecting readable lower bounds.  A
+    # panel can contain many diagnostic text fields, so a single global scale
+    # would make short numeric columns needlessly narrow.
+    minimums = {
+        column: (
+            TABLE_MIN_NUMERIC_WIDTH_CM
+            if numeric_columns.get(column, False)
+            else TABLE_MIN_TEXT_WIDTH_CM
+        )
+        for column in columns
+    }
+    while total > TABLE_CONTENT_WIDTH_CM + 1e-9:
+        candidates = [column for column in columns if widths[column] > minimums[column] + 1e-9]
+        if not candidates:
+            break
+        excess = total - TABLE_CONTENT_WIDTH_CM
+        reduction = excess / len(candidates)
+        for column in candidates:
+            widths[column] = max(minimums[column], widths[column] - reduction)
+        total = sum(widths.values())
+    return widths
+
+
 def table_header_cell(column: str) -> str:
+    math_label = _math_header(column)
+    if math_label:
+        return math_label
     label = column_label(column)
     words = label.split()
     if len(words) > 1 and len(label) > 10:
-        return r"\shortstack[l]{" + r"\\".join(latex_escape(word) for word in words) + "}"
+        cells = []
+        for word in words:
+            word_math = _math_header(word)
+            if word_math:
+                cells.append(word_math)
+                continue
+            cells.extend(
+                latex_escape(piece)
+                for piece in _header_word_lines(_title_word(word))
+            )
+        return r"\shortstack[c]{" + r"\\".join(cells) + "}"
     return latex_escape(label)
 
 
+def _header_word_lines(word: str) -> list[str]:
+    """Split a long header token into lines that fit narrow columns."""
+    if len(word) <= 9:
+        return [word]
+    camel_parts = [part for part in re.split(r"(?<=[a-z])(?=[A-Z])", word) if part]
+    if len(camel_parts) > 1:
+        lines: list[str] = []
+        for part in camel_parts:
+            lines.extend(_header_word_lines(part))
+        return lines
+    # Keep ordinary words readable while ensuring that a single unbreakable
+    # token cannot exceed a narrow fixed-width header cell.
+    return [word[start : start + 8] for start in range(0, len(word), 8)]
+
+
 def table_value_cell(record: TableRecord, column: str, row: dict[str, str], numeric_columns: dict[str, bool]) -> str:
-    value = format_cell(row.get(column, ""))
+    raw_value = row.get(column, "")
+    if numeric_columns.get(column, False):
+        value = format_cell(raw_value)
+    else:
+        value = display_table_value(column, raw_value)
     if not value:
         return ""
-    escaped = latex_escape(value)
-    if column in TABLE_LONG_TEXT_COLUMNS:
-        # Hashes and compact JSON selections have no natural break points.
-        # Allow TeX to wrap long runs inside the narrow text columns.
-        escaped = re.sub(r"([A-Za-z0-9]{8})(?=[A-Za-z0-9])", r"\1\\allowbreak{}", escaped)
+    if not numeric_columns.get(column, False):
+        # Insert break opportunities before escaping so generated TeX macros
+        # are never split.  Prefer semantic separators and camel-case
+        # boundaries; only long opaque tokens such as digests are chunked.
+        # Public dataset/model labels have dedicated, sufficiently wide
+        # columns; preserving them as whole labels avoids visual fragments
+        # such as ``ViT-`` or ``DenseNet-`` in the rendered report.
+        if _column_token(column) not in {
+            "dataset",
+            "model",
+            "architecture",
+            "cell",
+            "group_value",
+        }:
+            value = value.replace("_", "_@@BREAK@@")
+            value = value.replace("-", "-@@BREAK@@")
+            value = value.replace("/", "/@@BREAK@@")
+            # Require a substantial lowercase run before a camel-case
+            # boundary; this keeps compact names such as ``ViT`` and
+            # ``DenseNet`` intact.
+            value = re.sub(r"(?<=[a-z]{7})(?=[A-Z])", "@@BREAK@@", value)
+            value = re.sub(r"([A-Za-z0-9]{10})(?=[A-Za-z0-9]{4,})", r"\1@@BREAK@@", value)
+    escaped = latex_escape(value).replace("@@BREAK@@", r"\allowbreak{}")
     return escaped
 
 
@@ -1131,12 +1572,18 @@ def render_panel(
     header = " & ".join(table_header_cell(column) for column in columns) + r" \\"
     lines = [
         "% Generated by code/scripts/results_to_latex.py; do not edit by hand.",
+        "\\begingroup",
         "\\begin{landscape}",
-        "\\tiny",
-        "\\setlength{\\tabcolsep}{0.05cm}",
-        "\\renewcommand{\\arraystretch}{1.2}",
-        "\\setlength{\\LTleft}{0pt}",
-        "\\setlength{\\LTright}{0pt}",
+        "\\fontsize{4.5pt}{5.2pt}\\selectfont",
+        "\\setlength{\\tabcolsep}{0.025cm}",
+        "\\renewcommand{\\arraystretch}{1.10}",
+        "\\setlength{\\arrayrulewidth}{0.15pt}",
+        "\\setlength{\\LTleft}{\\fill}",
+        "\\setlength{\\LTright}{\\fill}",
+        "\\setlength{\\LTpre}{0pt}",
+        "\\setlength{\\LTpost}{0pt}",
+        "\\setlength{\\LTcapwidth}{\\linewidth}",
+        "\\sloppy",
         "\\begin{longtable}{" + alignment + "}",
         "\\caption{" + latex_escape(table_caption(record)) + "}\\label{tab:" + table_id + "-p" + str(panel_index) + "}\\\\",
         "\\hline",
@@ -1151,13 +1598,13 @@ def render_panel(
     for row in record.rows:
         values = [table_value_cell(record, column, row, numeric_columns) for column in columns]
         lines.append(" & ".join(values) + r" \\")
-    lines.extend(["\\hline", "\\end{longtable}", "\\end{landscape}", ""])
+    lines.extend(["\\hline", "\\end{longtable}", "\\end{landscape}", "\\endgroup", ""])
     return "\n".join(lines)
 
 
 def render_table(record: TableRecord, table_id: str) -> str:
     columns = record.columns or sorted({key for row in record.rows for key in row})
-    columns = [column for column in columns if column]
+    columns = [column for column in columns if column and not is_hidden_column(column)]
     if not columns:
         return ""
     panels = panel_columns(columns)
@@ -1169,13 +1616,7 @@ def render_table(record: TableRecord, table_id: str) -> str:
 
 
 def write_report_preamble(dataset: str) -> str:
-    label = display_dataset(dataset)
-    note = ""
-    if normalise_dataset(dataset) == "imagenet":
-        note = (
-            " The released ImageNet rows use the 100-class ImageNet-1k subset "
-            "(ImageNet100); the label ImageNet is used consistently in this collection."
-        )
+    """Return a minimal standalone preamble for a table-only report."""
     return "\n".join(
         [
             "\\documentclass[10pt,a4paper]{article}",
@@ -1185,19 +1626,9 @@ def write_report_preamble(dataset: str) -> str:
             "\\usepackage{lmodern}",
             "\\usepackage[hidelinks]{hyperref}",
             "\\captionsetup{hypcap=false}",
-            "",
-            f"\\title{{When Does Aggregating Explanations Work?\\\\\\large {latex_escape(label)} Results}}",
-            "\\author{Jinhua Xu, Davide Anguita, Fabio Roli, Jing Yuan, and Luca Oneto}",
-            "\\date{}",
+            "\\setlength{\\emergencystretch}{2em}",
             "",
             "\\begin{document}",
-            "\\maketitle",
-            "",
-            "\\noindent",
-            "This report is generated from the structured result files listed in",
-            "\\texttt{RESULT\\_MANIFEST.json}. It is organised by model and experiment",
-            "and retains incomplete snapshots together with additional result tables.",
-            latex_escape(note),
             "",
         ]
     )
@@ -1247,12 +1678,36 @@ def write_outputs(records: list[TableRecord], output: Path) -> dict[str, Any]:
         tables_tex: list[str] = ["% Generated by code/scripts/results_to_latex.py.", ""]
         current_records = [record for record in dataset_records if not record.historical and not record.empty]
         historical_records = [record for record in dataset_records if record.historical and not record.empty]
+        vit_records = [
+            record
+            for record in dataset_records
+            if normalise_model(record.model) == "vit-b16" and not record.empty
+        ]
+        current_non_vit = [
+            record
+            for record in current_records
+            if normalise_model(record.model) != "vit-b16"
+        ]
+        historical_non_vit = [
+            record
+            for record in historical_records
+            if normalise_model(record.model) != "vit-b16"
+        ]
 
         def append_model_sections(records_for_sections: list[TableRecord], heading_suffix: str = "") -> None:
             grouped: dict[str, list[TableRecord]] = defaultdict(list)
             for record in records_for_sections:
-                grouped[record.model].append(record)
-            for model in sorted(grouped, key=normalise_model):
+                # Group by the public model key so source-specific spellings
+                # (for example ``resnet18`` and ``ResNet-18``) share one
+                # section while every underlying table remains included.
+                grouped[normalise_model(record.model)].append(record)
+            for model in sorted(
+                grouped,
+                key=lambda value: (
+                    0 if normalise_model(value) == "vit-b16" else 1,
+                    normalise_model(value),
+                ),
+            ):
                 title = display_model(model) + heading_suffix
                 tables_tex.append(f"\\section{{{latex_escape(title)}}}")
                 tables_tex.append("")
@@ -1262,14 +1717,14 @@ def write_outputs(records: list[TableRecord], output: Path) -> dict[str, Any]:
                     tables_tex.append(f"\\input{{tables/{Path(record.generated_path).name}}}")
                     tables_tex.append("")
 
-        append_model_sections(current_records)
-        if historical_records:
-            tables_tex.extend([
-                "\\appendix",
-                "\\section*{Additional result tables}",
-                "",
-            ])
-            append_model_sections(historical_records)
+        # ViT is the first model section whenever any ViT table is present,
+        # including datasets whose ViT export is itself a snapshot.  Other
+        # snapshot tables remain in the appendix without an archival label.
+        append_model_sections(vit_records)
+        append_model_sections(current_non_vit)
+        if historical_non_vit:
+            tables_tex.extend(["\\appendix", ""])
+            append_model_sections(historical_non_vit)
         (dataset_dir / "tables.tex").write_text("\n".join(tables_tex), encoding="utf-8")
         (dataset_dir / "main.tex").write_text(
             write_report_preamble(dataset)
@@ -1286,7 +1741,7 @@ def write_outputs(records: list[TableRecord], output: Path) -> dict[str, Any]:
             f"# {display_dataset(dataset)} results",
             "",
             f"This report contains {counts[dataset]} generated LaTeX tables from released structured result and diagnostic exports.",
-            "Tables are grouped by model in `tables.tex`; incomplete snapshots and additional result tables follow the LaTeX appendix marker.",
+            "Tables are grouped by model in `tables.tex`; ViT appears first when present and additional result tables are retained in the appendix.",
             "",
         ]
         if normalise_dataset(dataset) == "imagenet":
@@ -1329,7 +1784,7 @@ def write_outputs(records: list[TableRecord], output: Path) -> dict[str, Any]:
         "",
         "Generated by `code/scripts/results_to_latex.py`. Each dataset has a standalone report under `by-dataset/<dataset>/`; model sections and experiment tables are included from `tables.tex`.",
         "",
-        "The manifest records every discovered CSV/log export, including empty files and available snapshots. Empty sources are recorded but do not produce empty LaTeX tables.",
+        "The manifest records every discovered CSV/log export, including empty files and all available result exports. Empty sources are recorded but do not produce empty LaTeX tables.",
         "",
         "ImageNet-labelled results use the 100-class ImageNet-1k subset (ImageNet100). Reports list the dataset/model rows available in each source table.",
         "The count includes real-checkpoint compatibility diagnostics where available; those tables report execution checks, not completed Phase 2 quality or robustness metrics.",
