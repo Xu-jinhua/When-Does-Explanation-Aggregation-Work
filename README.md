@@ -49,29 +49,41 @@ The implementation is organized around the following stages:
 
 ### Datasets
 
-The experiments use ImageNet and the MedMNIST image classification datasets.
+The experiments use ImageNet, MedMNIST, Food-101, and Places365. The official
+dataset pages are provided below for data access and download.
+
+| Dataset | Official page |
+|:--|:--|
+| ImageNet | [image-net.org](https://www.image-net.org/) |
+| MedMNIST | [medmnist.com](https://medmnist.com/) |
+| Food-101 | [ETH Zurich dataset page](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) |
+| Places365 | [MIT Places365](http://places2.csail.mit.edu/) |
+
 Dataset manifests and preprocessing settings are defined in
 [`code/configs/`](code/configs/).
 
-### Phase 0
+### Data Preparation and Model Training (Phase 0)
 
 Phase 0 prepares the data manifests, class stratified partitions, reference
 models, checkpoints, and train split statistics used by the later stages.
 
-### Phase 1
+Source: [`code/src/xai_ensemble/phase0/`](code/src/xai_ensemble/phase0/)
 
-Phase 1 generates post hoc attribution maps for each configured model,
-dataset, perturbation condition, and explanation method. The resulting
-artifacts are immutable and include their provenance metadata.
+### Attribution Generation Process (Phase 1)
 
-### Phase 2
+Phase 1 generates post hoc attribution maps for each configured model, dataset,
+perturbation condition, and explanation method. The resulting artifacts are
+immutable and include their provenance metadata.
+
+Source: [`code/src/xai_ensemble/phase1/`](code/src/xai_ensemble/phase1/)
+
+### Explanation Aggregation and Evaluation (Phase 2)
 
 Phase 2 ranks image patches, aggregates the explanation rankings with the
-configured ensemble rules, and evaluates fidelity, consistency, and
-robustness through the masking game.
+configured ensemble rules, and evaluates fidelity, consistency, and robustness
+through the masking game.
 
-The implementation is available in [`code/`](code/); command details and
-configuration examples are kept with the source tree.
+Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
 
 ## License
 

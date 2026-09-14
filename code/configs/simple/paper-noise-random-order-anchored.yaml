@@ -1,7 +1,7 @@
 schema_version: 1
 study_id: paper-noise-random-order-anchored-v1
 noise_prefix_config: paper-noise-prefix-sweep.yaml
-independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/independent-geometry-noise-v1/selector.json
+independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/selector.json
 
 # This mechanism audit reuses the immutable p=16 clean rank bank. It changes
 # only the method order and applies the same anchored q selector as NOISE.

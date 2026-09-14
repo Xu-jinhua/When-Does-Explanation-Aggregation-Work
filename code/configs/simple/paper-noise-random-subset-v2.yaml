@@ -1,7 +1,7 @@
 schema_version: 1
 study_id: paper-noise-random-subset-v2
 noise_prefix_config: paper-noise-prefix-sweep.yaml
-independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/independent-geometry-noise-v1/selector.json
+independent_selector: ../../results/simple/paper-noise-prefix-sweep-v1/signed-r-v2/selector.json
 
 # This Phase-2-only mechanism audit reads immutable p=16 rank-ready inputs and
 # writes to a new namespace. It never regenerates attribution.
