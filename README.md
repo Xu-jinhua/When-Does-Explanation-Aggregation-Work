@@ -126,3 +126,23 @@ configured ensemble rules, and evaluates fidelity, consistency, and robustness
 through the masking game.
 
 Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
+
+## Project Structure
+
+```text
+.
+├── results/
+│   ├── pdf/by-dataset/       # Published dataset-level PDF reports
+│   └── latex/by-dataset/     # LaTeX sources for the reports
+└── code/
+    ├── configs/              # Dataset, model, and experiment configurations
+    ├── results/              # Supporting experiment artifacts
+    ├── scripts/              # Data and result processing utilities
+    ├── src/xai_ensemble/
+    │   ├── data/             # Dataset preparation and manifests
+    │   ├── phase0/           # Data preparation and model training
+    │   ├── phase1/           # Attribution generation
+    │   └── phase2/           # Aggregation and evaluation
+    ├── tests/                # Automated tests
+    └── vendor/               # Pinned third-party implementations
+```
