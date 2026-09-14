@@ -96,13 +96,14 @@ method names below are the identifiers used by the experiment configurations.
 | DeepLift | [PyTorch Captum](https://github.com/pytorch/captum) | [Learning Important Features Through Propagating Activation Differences](https://arxiv.org/abs/1704.02685) |
 | GradientShap, DeepLiftShap | [PyTorch Captum](https://github.com/pytorch/captum) | [A Unified Approach to Interpreting Model Predictions](https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html) |
 | LRP (CNN) | [PyTorch Captum](https://github.com/pytorch/captum) | [On Pixel-Wise Explanations for Non-Linear Classifier Decisions by Layer-Wise Relevance Propagation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130140) |
-| CheferTransformerAttribution, PartialLRP, FullLRP (ViT) | [Vendored Transformer-Explainability snapshot](code/vendor/Transformer-Explainability/) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838) |
+| CheferTransformerAttribution, PartialLRP, FullLRP (ViT) | [Transformer-Explainability](https://github.com/hila-chefer/Transformer-Explainability) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838) |
 | GradientAttentionRollout | [Repository attention adapter](code/src/xai_ensemble/phase1/transformer.py) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838) |
 | AttentionGradCAM | [Repository attention adapter](code/src/xai_ensemble/phase1/transformer.py) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838); [Grad-CAM](https://arxiv.org/abs/1610.02391) |
 
 Captum is used as the implementation library for the generic CNN and ViT
-attribution methods listed above. The Chefer source snapshot is retained under
-[`code/vendor/`](code/vendor/) with its upstream license and provenance.
+attribution methods listed above. The transformer relevance propagation methods
+follow the implementation released with the cited Transformer-Explainability
+work.
 
 ### Data Preparation and Model Training (Phase 0)
 
@@ -134,6 +135,7 @@ Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
 ├── results/
 │   ├── pdf/by-dataset/       # Published dataset-level PDF reports
 │   └── latex/by-dataset/     # LaTeX sources for the reports
+├── docs/                     # Experiment and analysis documentation
 └── code/
     ├── configs/              # Dataset, model, and experiment configurations
     ├── results/              # Supporting experiment artifacts
@@ -143,6 +145,9 @@ Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
     │   ├── phase0/           # Data preparation and model training
     │   ├── phase1/           # Attribution generation
     │   └── phase2/           # Aggregation and evaluation
-    ├── tests/                # Automated tests
-    └── vendor/               # Pinned third-party implementations
+    └── tests/                # Automated tests
 ```
+
+The documentation index is available in [`docs/README.md`](docs/README.md),
+with guides to the experiment pipeline, full-matrix analysis, and NOISE
+generalization.
