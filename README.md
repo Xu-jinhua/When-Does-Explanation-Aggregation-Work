@@ -45,7 +45,9 @@ the compiled PDF and its LaTeX source are published together.
 
 ## Code
 
-The implementation is organized around the following stages:
+The implementation is available in [`code/`](code/), with configuration files
+in [`code/configs/`](code/configs/) and the command-line entry point `xai-exp`.
+The code is organized around the following stages:
 
 ### Datasets
 
@@ -60,7 +62,21 @@ dataset pages are provided below for data access and download.
 | Places365 | [MIT Places365](http://places2.csail.mit.edu/) |
 
 Dataset manifests and preprocessing settings are defined in
+[`code/src/xai_ensemble/data/`](code/src/xai_ensemble/data/) and
 [`code/configs/`](code/configs/).
+
+### Models
+
+The collection uses the following image classification architectures:
+
+| Model | Source |
+|:--|:--|
+| ResNet-18 | [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) |
+| ResNet-50 | [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) |
+| DenseNet-121 | [Densely Connected Convolutional Networks](https://arxiv.org/abs/1608.06993) |
+| EfficientNet-B0 | [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946) |
+| MobileNetV3-Large | [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244) |
+| ViT-B/16 | [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/abs/2010.11929) |
 
 ### Data Preparation and Model Training (Phase 0)
 
