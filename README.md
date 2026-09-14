@@ -91,12 +91,14 @@ method names below are the identifiers used by the experiment configurations.
 | IntegratedGradients | [PyTorch Captum](https://github.com/pytorch/captum) | [Axiomatic Attribution for Deep Networks](https://arxiv.org/abs/1703.01365) |
 | GuidedBackprop | [PyTorch Captum](https://github.com/pytorch/captum) | [Striving for Simplicity](https://arxiv.org/abs/1412.6806) |
 | Deconvolution | [PyTorch Captum](https://github.com/pytorch/captum) | [Visualizing and Understanding Convolutional Networks](https://arxiv.org/abs/1311.2901) |
-| FeatureAblation, Occlusion | [PyTorch Captum](https://github.com/pytorch/captum) | [Captum attribution algorithm references](https://captum.ai/docs/attribution_algorithms); Occlusion follows [Visualizing and Understanding Convolutional Networks](https://arxiv.org/abs/1311.2901) |
+| FeatureAblation | [PyTorch Captum](https://github.com/pytorch/captum) | [Captum attribution algorithm references](https://captum.ai/docs/attribution_algorithms) |
+| Occlusion | [PyTorch Captum](https://github.com/pytorch/captum) | [Visualizing and Understanding Convolutional Networks](https://arxiv.org/abs/1311.2901) |
 | DeepLift | [PyTorch Captum](https://github.com/pytorch/captum) | [Learning Important Features Through Propagating Activation Differences](https://arxiv.org/abs/1704.02685) |
 | GradientShap, DeepLiftShap | [PyTorch Captum](https://github.com/pytorch/captum) | [A Unified Approach to Interpreting Model Predictions](https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html) |
 | LRP (CNN) | [PyTorch Captum](https://github.com/pytorch/captum) | [On Pixel-Wise Explanations for Non-Linear Classifier Decisions by Layer-Wise Relevance Propagation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130140) |
 | CheferTransformerAttribution, PartialLRP, FullLRP (ViT) | [Vendored Transformer-Explainability snapshot](code/vendor/Transformer-Explainability/) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838) |
-| GradientAttentionRollout, AttentionGradCAM (ViT) | [Repository attention adapter](code/src/xai_ensemble/phase1/transformer.py) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838); [Grad-CAM](https://arxiv.org/abs/1610.02391) |
+| GradientAttentionRollout | [Repository attention adapter](code/src/xai_ensemble/phase1/transformer.py) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838) |
+| AttentionGradCAM | [Repository attention adapter](code/src/xai_ensemble/phase1/transformer.py) | [Transformer Interpretability Beyond Attention Visualization](https://arxiv.org/abs/2012.09838); [Grad-CAM](https://arxiv.org/abs/1610.02391) |
 
 Captum is used as the implementation library for the generic CNN and ViT
 attribution methods listed above. The Chefer source snapshot is retained under
