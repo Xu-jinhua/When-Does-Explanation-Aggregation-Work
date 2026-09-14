@@ -84,10 +84,3 @@ configured ensemble rules, and evaluates fidelity, consistency, and robustness
 through the masking game.
 
 Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
-
-## License
-
-The code and documentation in this repository are released under the
-[MIT License](LICENSE). The vendored `Transformer-Explainability` snapshot
-under `code/vendor/` is MIT licensed by its authors; see
-[`code/vendor/README.md`](code/vendor/README.md).
