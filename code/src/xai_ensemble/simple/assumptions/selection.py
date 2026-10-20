@@ -1,4 +1,4 @@
-"""Test-set Fidelity ordering and Oracle NOISE prefix selection."""
+"""Validation-split Fidelity ordering and test-set Oracle NOISE prefix selection."""
 
 from __future__ import annotations
 
@@ -60,6 +60,29 @@ def _base_manifest(
     if not isinstance(metrics, Mapping):
         raise ArtifactError("NAIVE Phase 2 manifest has no metric summary")
     return source_task, root, manifest
+
+
+def _fidelity_manifest(
+    experiment: AssumptionExperiment,
+    task: SelectionTask,
+) -> Mapping[str, Any]:
+    source_task = experiment.base_fidelity_phase2_task(task.cell)
+    store = ArtifactStore(experiment.base)
+    root = phase2_artifact_root(source_task)
+    manifest = completed_manifest(
+        store,
+        root,
+        expected_task_digest=source_task.digest,
+        expected_schema_version=PHASE2_SCHEMA_VERSION,
+    )
+    if manifest is None:
+        raise FileNotFoundError(f"Fidelity-ordering clean Phase 2 artifact is incomplete: {root}")
+    if manifest.get("split") != experiment.selection.fidelity_split:
+        raise ArtifactError("Oracle NOISE Fidelity ordering uses the configured fidelity split")
+    metrics = manifest.get("metrics")
+    if not isinstance(metrics, Mapping):
+        raise ArtifactError("Fidelity-ordering Phase 2 manifest has no metric summary")
+    return manifest
 
 
 def _load_rank_shard(
@@ -179,7 +202,8 @@ def run_selection_task(
     if complete is not None:
         return complete
     source_task, source_root, source = _base_manifest(experiment, task)
-    metrics = source["metrics"]
+    fidelity_manifest = _fidelity_manifest(experiment, task)
+    metrics = fidelity_manifest["metrics"]
     fidelity = {family: float(metrics[f"single__{family}"]["F"]) for family in task.cell.methods}
     ordering, ordered_methods = order_methods_by_fidelity(task.cell.methods, fidelity)
     prefix_sizes = tuple(range(experiment.selection.min_prefix, len(task.cell.methods) + 1))
@@ -294,7 +318,8 @@ def run_selection_task(
         "k": experiment.k,
         "sample_count": sample_count,
         "fidelity_metric": "F",
-        "fidelity_scope": "complete_test_set",
+        "fidelity_scope": f"complete_{experiment.selection.fidelity_split}_set",
+        "fidelity_split": experiment.selection.fidelity_split,
         "fidelity": fidelity,
         "source_phase2": {
             "task_id": source_task.task_id,

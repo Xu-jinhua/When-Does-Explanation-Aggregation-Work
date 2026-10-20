@@ -261,12 +261,32 @@ def base_input_readiness(experiment: AssumptionExperiment) -> Mapping[str, Any]:
             completed_adversarial_manifest(experiment.base, task, store=base_store) is not None
         ),
     )
+    fidelity_phase2 = _artifact_group(
+        (
+            tuple(experiment.base_fidelity_phase2_task(cell) for cell in experiment.cells())
+            if experiment.uses_oracle_noise
+            else ()
+        ),
+        kind="phase2",
+        statuses=statuses,
+        queue_authoritative=queue_authoritative,
+        probe=lambda task: (
+            completed_manifest(
+                base_store,
+                phase2_artifact_root(task),
+                expected_task_digest=task.digest,
+                expected_schema_version=PHASE2_SCHEMA_VERSION,
+            )
+            is not None
+        ),
+    )
     groups = {
         "phase1_profiles": _profile_group(experiment),
         "phase2_profiles": _phase2_profile_group(experiment),
         "adversarial_datasets": adversarial,
         "phase1_p16": phase1,
         "phase2_p16": phase2,
+        "phase2_fidelity": fidelity_phase2,
     }
     return {
         "schema_version": 1,

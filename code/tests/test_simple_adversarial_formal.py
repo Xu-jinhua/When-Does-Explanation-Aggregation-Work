@@ -95,12 +95,12 @@ def test_formal_condition_adds_only_new_task_ids_and_keeps_scheduler_namespace(
 
     assert expanded.scheduler_digest == baseline.scheduler_digest
     assert expanded.scheduler_digest == (
-        "9a47f17a4f0a0e6f44094fe8fb976606e9c9bb47feb87040ae5f6a048768abb4"
+        "aec6baf842958333171c51d803953702af581096670336f9bee0eb16edd8f0ee"
     )
     assert expanded.phase1_digest == baseline.phase1_digest
-    assert len(expanded.adversarial_tasks()) == 4
-    assert len(expanded.phase1_tasks()) == 220
-    assert len(expanded.phase2_tasks()) == 60
+    assert len(expanded.adversarial_tasks()) == 8
+    assert len(expanded.phase1_tasks()) == 440
+    assert len(expanded.phase2_tasks()) == 120
     assert {task.task_id for task in baseline.phase1_tasks()} == {
         task.task_id for task in expanded.phase1_tasks() if task.condition.kind != "adversarial"
     }

@@ -40,6 +40,7 @@ from .dual_geometry import (
     REPORT_COLUMNS,
     TRANSFER_FIDELITY_REGRET_TOLERANCE,
     _base_selector_inputs,
+    _fidelity_marks,
     _mapping,
     _prefix_selector_inputs,
     _verified_digest,
@@ -118,6 +119,7 @@ def build_independent_geometry_selector(
             expected_task_digest=expected_base_task.digest,
             patch_size=experiment.patch_size,
             k=experiment.k,
+            fidelity=_fidelity_marks(experiment, cell),
         )
         prefix = _prefix_selector_inputs(
             prefix_cache,

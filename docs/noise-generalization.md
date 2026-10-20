@@ -9,7 +9,7 @@ The scientific scope is the complete test split, `p=16`, `k=20`, dataset-mean
 filling, all eleven CNN explainers, and the five conditions used by the main
 experiment: clean, Gaussian 0.15, salt-and-pepper 0.05, speckle 0.15, and the
 Sara-style adversarial condition at 2/255. Fidelity orders the eleven
- individual methods on clean test data. The NOISE selector then runs the
+individual methods on clean validation data. The NOISE selector then runs the
 existing Spearman/Borda and Kendall/Kemeny distance tests as a historical
 comparator. The prefix consumer evaluates every q from 2 through 11 for every
 rule and condition. The primary generalization test freezes the

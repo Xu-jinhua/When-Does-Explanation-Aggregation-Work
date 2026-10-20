@@ -284,10 +284,10 @@ def test_assumption_dag_has_the_paper_scope(tmp_path: Path) -> None:
     experiment = load_assumption_experiment(CONFIG)
 
     assert experiment.settings == ("ind", "matched-naive", "oracle-noise")
-    assert experiment.digest == "ccc9c72ecf3f3bb4ae56ea5469b6254e1df49722dc11bb992054d91484035c08"
+    assert experiment.digest == "60689560ea53ca5835346f77731f31c8955cdbcb28a03b9b6f19bf6c393dc164"
     assert (
         experiment.scheduler_digest
-        == "9e37e594baf0e7c77d0cb46e2a848dbf8635bd426d9bff28aa0630c6fdfb9562"
+        == "258b0a51b9a41a77e22de1cd557d3d229833e5c34bb14e508f7ea3fa922bf61a"
     )
     assert len(experiment.cells()) == 4
 

@@ -38,7 +38,7 @@ datasets:
     registry_key: pathmnist
     # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
     manifest_path: /path/to/pathmnist.manifest.json
-    splits: [test]
+    splits: [validation, test]
     # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
     cache_directory: ~/.cache/huggingface
     keep_provider_in_memory: false

@@ -73,7 +73,7 @@ def _plan_value(experiment: Any) -> dict[str, Any]:
         "scheduler_digest": experiment.scheduler_digest,
         "fidelity_order": {
             "metric": "F",
-            "scope": "complete_test_set",
+            "scope": f"complete_{experiment.assumptions.selection.fidelity_split}_set",
             "direction": "descending",
             "tie_break": "method_id_ascending",
         },

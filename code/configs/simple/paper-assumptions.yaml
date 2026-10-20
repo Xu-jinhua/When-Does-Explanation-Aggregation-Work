@@ -63,6 +63,7 @@ selection:
   bootstrap_replicates: 499
   min_prefix: 2
   selection_rule: largest_not_rejected
+  fidelity_split: validation
   # p=16 on 224x224 gives 14x14=196 rank items. This artifact is generated
   # once by the prepare job and is not a runtime resource calibration.
   # The implementation derives a versioned local v2 path from this stable

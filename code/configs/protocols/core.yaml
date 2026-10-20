@@ -169,6 +169,7 @@ ind:
 noise_selection:
   mode: in_sample_oracle
   ordering_metric: fidelity
+  ordering_split: validation
   patch_size: 16
   top_k: 20
   fill: dataset_mean

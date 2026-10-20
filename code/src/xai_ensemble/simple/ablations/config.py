@@ -338,7 +338,7 @@ class AblationExperiment:
             methods=self.base.methods,
             storage=self.output_storage,
             runtime=runtime,
-            datasets=(self.dataset,),
+            datasets=(replace(self.dataset, splits=(self.split,)),),
             models=(self.model,),
             conditions=conditions,
             phase2=phase2,

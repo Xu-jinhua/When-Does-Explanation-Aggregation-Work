@@ -22,7 +22,13 @@ from xai_ensemble.core.io import atomic_write_json, atomic_write_text, read_json
 from xai_ensemble.phase2.metrics import DEFAULT_METRIC_DIRECTIONS, QUALITY_METRICS
 from xai_ensemble.phase2.selection import order_methods_by_fidelity
 
-from ..artifacts import PHASE2_SCHEMA_VERSION
+from ..artifacts import (
+    PHASE2_SCHEMA_VERSION,
+    ArtifactError,
+    ArtifactStore,
+    completed_manifest,
+    phase2_artifact_root,
+)
 from ..robustness import (
     SIGNED_ROBUSTNESS_DIRECTION,
     SIGNED_ROBUSTNESS_POLICY,
@@ -191,6 +197,28 @@ def _base_source_records(
     return tuple((path, fallback_labels) for path in shard_paths), None
 
 
+def _fidelity_marks(
+    experiment: NoisePrefixExperiment,
+    cell: Any,
+) -> Mapping[str, float]:
+    """Read method-level clean-F marks from the configured fidelity split."""
+
+    task = experiment.base_fidelity_phase2_task(cell)
+    store = ArtifactStore(experiment.base)
+    manifest = completed_manifest(
+        store,
+        phase2_artifact_root(task),
+        expected_task_digest=task.digest,
+        expected_schema_version=PHASE2_SCHEMA_VERSION,
+    )
+    if manifest is None:
+        raise FileNotFoundError(f"Fidelity-ordering artifact is incomplete for {cell.cell_id}")
+    metrics = manifest.get("metrics")
+    if not isinstance(metrics, Mapping):
+        raise ArtifactError("Fidelity-ordering manifest has no metric summary")
+    return {method: float(metrics[f"single__{method}"]["F"]) for method in cell.methods}
+
+
 def _base_selector_inputs(
     cache: Path,
     *,
@@ -198,8 +226,14 @@ def _base_selector_inputs(
     expected_task_digest: str,
     patch_size: int,
     k: int,
+    fidelity: Mapping[str, float] | None = None,
 ) -> Mapping[str, Any]:
-    """Read only q=11 ranks and method-level clean-F sufficient statistics."""
+    """Read only q=11 ranks and method-level clean-F sufficient statistics.
+
+    ``fidelity`` supplies the method-ordering marks from the configured
+    fidelity split; when omitted, the marks are derived from the loaded
+    shards' own clean-F contributions.
+    """
 
     methods = tuple(cell.methods)
     source_records, manifest_content_digest = _base_source_records(
@@ -268,10 +302,12 @@ def _base_selector_inputs(
         "task_digest": task_digest,
         "manifest_content_digest": manifest_content_digest,
     }
-    fidelity = {
-        method: float(values["contributions"][:, position].mean())
-        for position, method in enumerate(methods)
-    }
+    if fidelity is None:
+        fidelity = {
+            method: float(values["contributions"][:, position].mean())
+            for position, method in enumerate(methods)
+        }
+    fidelity = {method: float(fidelity[method]) for method in methods}
     method_order, ordered_methods = order_methods_by_fidelity(methods, fidelity)
     values["fidelity"] = fidelity
     values["ordered_methods"] = tuple(ordered_methods)
@@ -420,6 +456,7 @@ def build_dual_geometry_selector(
             expected_task_digest=expected_base_task.digest,
             patch_size=experiment.patch_size,
             k=experiment.k,
+            fidelity=_fidelity_marks(experiment, cell),
         )
         prefix = _prefix_selector_inputs(
             prefix_cache,

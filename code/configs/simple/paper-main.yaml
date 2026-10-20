@@ -31,7 +31,7 @@ datasets:
     registry_key: imagenet100
     # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
     manifest_path: /path/to/imagenet100.manifest.json
-    splits: [test]
+    splits: [validation, test]
     # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
     cache_directory: ~/.cache/huggingface
     keep_provider_in_memory: false
@@ -41,7 +41,7 @@ datasets:
     registry_key: dermamnist
     # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
     manifest_path: /path/to/dermamnist.manifest.json
-    splits: [test]
+    splits: [validation, test]
     # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
     cache_directory: ~/.cache/huggingface
     keep_provider_in_memory: false

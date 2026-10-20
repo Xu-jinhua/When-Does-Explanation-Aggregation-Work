@@ -511,7 +511,7 @@ def run_evaluation_task(
         "autocast": False,
         "target_policy": "full_reference_clean_fp32_prediction",
         "unmasked_prediction_source": "rank_ready_full_reference_fp32_logits_argmax",
-        "fidelity_scope": "complete_test_set",
+        "fidelity_scope": f"complete_{experiment.assumptions.selection.fidelity_split}_set",
         "fidelity_direction": "descending",
         "fidelity_tie_break": "method_id_ascending",
         "fidelity": dict(task_row["fidelity"]),

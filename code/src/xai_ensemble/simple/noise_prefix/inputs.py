@@ -382,6 +382,50 @@ def _base_phase2_manifest(
     return source_task, root, manifest
 
 
+def _fidelity_manifest(
+    experiment: NoisePrefixExperiment,
+    cell: Any,
+    store: ArtifactStore,
+) -> Mapping[str, Any]:
+    source_task = experiment.base_fidelity_phase2_task(cell)
+    root = phase2_artifact_root(source_task)
+    manifest = completed_manifest(
+        store,
+        root,
+        expected_task_digest=source_task.digest,
+        expected_schema_version=PHASE2_SCHEMA_VERSION,
+    )
+    if manifest is None:
+        raise FileNotFoundError(f"Required Fidelity-ordering artifact is incomplete: {root}")
+    expected = {
+        "dataset": cell.dataset.dataset_id,
+        "model": cell.reference_model.model_id,
+        "split": experiment.assumptions.selection.fidelity_split,
+        "condition": "clean",
+        "patch_size": experiment.patch_size,
+        "k": experiment.k,
+        "rank_base": 0,
+    }
+    mismatches = {
+        key: {"expected": value, "actual": manifest.get(key)}
+        for key, value in expected.items()
+        if manifest.get(key) != value
+    }
+    if mismatches:
+        raise ArtifactError(f"Fidelity-ordering source identity mismatch: {mismatches}")
+    if manifest.get("methods") != list(cell.methods):
+        raise ArtifactError(f"Fidelity-ordering source roster mismatch for {cell.cell_id}")
+    metrics = manifest.get("metrics")
+    if not isinstance(metrics, Mapping):
+        raise ArtifactError("Fidelity-ordering source has no metric summary")
+    missing = [
+        f"single__{method}" for method in cell.methods if f"single__{method}" not in metrics
+    ]
+    if missing:
+        raise ArtifactError(f"Fidelity-ordering source lacks metrics: {missing}")
+    return manifest
+
+
 def _fidelity_order(
     cell: Any,
     clean_manifest: Mapping[str, Any],
@@ -410,8 +454,9 @@ def _selection_records(
         selection = manifest.get("selection")
         if not isinstance(selection, Mapping):
             raise ArtifactError(f"Malformed NOISE selection artifact: {task.task_id}")
+        fidelity_scope = f"complete_{experiment.assumptions.selection.fidelity_split}_set"
         if (
-            manifest.get("fidelity_scope") != "complete_test_set"
+            manifest.get("fidelity_scope") != fidelity_scope
             or manifest.get("oracle_scope") != "complete_test_set_in_sample"
             or manifest.get("fidelity") != dict(fidelity)
             or selection.get("ordered_methods") != list(ordered_methods)
@@ -568,7 +613,12 @@ def prepare_input_catalog(
                     base_manifests,  # type: ignore[arg-type]
                 )
                 phase2_cache[clean_task.task_id] = clean
-                fidelity, ordered = _fidelity_order(cell, clean[2])
+                fidelity, ordered = _fidelity_order(
+                    cell,
+                    _fidelity_manifest(
+                        experiment, cell, base_manifests  # type: ignore[arg-type]
+                    ),
+                )
                 order_by_cell[cell.cell_id] = (fidelity, ordered)
                 if selection_manifests is None:
                     selections[cell.cell_id] = _deferred_selection_records(

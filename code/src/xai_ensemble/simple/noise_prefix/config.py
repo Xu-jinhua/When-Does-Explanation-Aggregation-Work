@@ -152,7 +152,7 @@ class NoisePrefixExperiment:
                 "science": dict(self.raw_science),
                 "fidelity_order": {
                     "metric": "F",
-                    "scope": "complete_test_set",
+                    "scope": f"complete_{self.assumptions.selection.fidelity_split}_set",
                     "direction": "descending",
                     "tie_break": "method_id_ascending",
                 },
@@ -178,6 +178,9 @@ class NoisePrefixExperiment:
 
     def base_phase2_task(self, cell: Cell, condition_id: str) -> Any:
         return self.assumptions.base_phase2_task(cell, condition_id)
+
+    def base_fidelity_phase2_task(self, cell: Cell) -> Any:
+        return self.assumptions.base_fidelity_phase2_task(cell)
 
     def evaluation_tasks(self) -> tuple[PrefixEvaluationTask, ...]:
         if cached := self._task_cache.get("evaluations"):

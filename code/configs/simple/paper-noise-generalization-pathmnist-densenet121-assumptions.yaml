@@ -54,6 +54,7 @@ selection:
   bootstrap_replicates: 499
   min_prefix: 2
   selection_rule: largest_not_rejected
+  fidelity_split: validation
   spearman_artifact: ./runs/noise-generalization-pathmnist-densenet121-oracle-noise-v1/statistics/spearman-mallows-p196.npz
   spearman_calibration_config: ../pilots/noise_gof_cost.yaml
 

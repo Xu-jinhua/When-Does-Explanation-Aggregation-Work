@@ -126,6 +126,7 @@ class NoiseSelectionConfig:
     selection_rule: Literal["largest_not_rejected"]
     spearman_artifact: Path
     spearman_calibration_config: Path
+    fidelity_split: str = "validation"
 
     def __post_init__(self) -> None:
         if not 0.0 < self.alpha < 1.0:
@@ -134,6 +135,8 @@ class NoiseSelectionConfig:
             raise ValueError("selection bootstrap count and min_prefix are invalid")
         if self.selection_rule != "largest_not_rejected":
             raise ValueError("Oracle NOISE is fixed to the largest non-rejected prefix")
+        if not self.fidelity_split:
+            raise ValueError("selection.fidelity_split must be a non-empty split name")
 
 
 @dataclass(frozen=True, slots=True)
@@ -302,6 +305,11 @@ class AssumptionExperiment:
         for dataset in self.base.datasets:
             if self.split not in dataset.splits:
                 raise ValueError(f"Base dataset {dataset.dataset_id} lacks split {self.split}")
+            if self.selection.fidelity_split not in dataset.splits:
+                raise ValueError(
+                    f"Base dataset {dataset.dataset_id} lacks Fidelity split "
+                    f"{self.selection.fidelity_split}"
+                )
 
     @property
     def digest(self) -> str:
@@ -530,7 +538,8 @@ class AssumptionExperiment:
                     "aggregation": aggregation,
                     "base_phase2_task": self.base_phase2_task(cell, "clean").digest,
                     "methods": list(cell.methods),
-                    "fidelity_scope": "complete_test_set",
+                    "fidelity_scope": f"complete_{self.selection.fidelity_split}_set",
+                    "fidelity_phase2_task": self.base_fidelity_phase2_task(cell).digest,
                     "selection_scope": "complete_test_set",
                     "alpha": self.selection.alpha,
                     "bootstrap_replicates": self.selection.bootstrap_replicates,
@@ -730,6 +739,24 @@ class AssumptionExperiment:
             )
         return matches[0]
 
+    def base_fidelity_phase2_task(self, cell: Cell) -> Any:
+        matches = [
+            task
+            for task in self.base.phase2_tasks()
+            if task.dataset.dataset_id == cell.dataset.dataset_id
+            and task.model.model_id == cell.reference_model.model_id
+            and task.split == self.selection.fidelity_split
+            and task.condition.condition_id == "clean"
+            and task.patch_size == self.patch_size
+            and task.ensemble.ensemble_id == "all-paper-methods"
+        ]
+        if len(matches) != 1:
+            raise RuntimeError(
+                f"Expected one p=16 clean Fidelity-ordering source for {cell.cell_id} "
+                f"on split {self.selection.fidelity_split}; found {len(matches)}"
+            )
+        return matches[0]
+
     def source_model(self, task: TrainingTask, checkpoint_path: Path) -> ModelConfig:
         model = task.cell.reference_model
         return ModelConfig(
@@ -905,6 +932,7 @@ def load_assumption_experiment(path: str | Path) -> AssumptionExperiment:
         spearman_calibration_config=_path(
             selection_row["spearman_calibration_config"], base=source.parent
         ),
+        fidelity_split=str(selection_row.get("fidelity_split", "validation")),
     )
     science = _mapping(root.get("science", {}), context="science")
     raw_settings = _sequence(
