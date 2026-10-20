@@ -17,7 +17,7 @@ methods:
     architectures: [cnn, vit]
     profile_start: 8
     params:
-      n_steps: 200
+      n_steps: 50
       baseline: zero
       baseline_space: model_input
 
