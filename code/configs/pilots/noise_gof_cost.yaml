@@ -10,7 +10,7 @@ pass:
   pvalue_monte_carlo_se_at_0_05_max: 0.01
 selection: smallest_budget_meeting_precision_and_time
 spearman_mallows_approximation:
-  reason: exact Spearman-distance multiplicities are infeasible at the 256-patch grid
+  reason: exact Spearman-distance multiplicities are infeasible at the 196-patch grid
   adapter: xai_ensemble.phase2.selection:locked_spearman_family_factory
   algorithm: deterministic_mixture_importance_sampling
   # Each proposal is an exactly normalized Kendall--Mallows law. q=0 anchors

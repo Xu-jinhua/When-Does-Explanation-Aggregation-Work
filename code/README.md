@@ -43,6 +43,7 @@ All commands accept `--help`. The top-level groups are:
 xai-exp protocol   Validate and snapshot a machine-readable protocol
 xai-exp phase0     Prepare data and train models
 xai-exp simple     Run the paper-first two-stage experiment
+xai-exp pilot      Run pre-experiment pilots and adjudicate their results
 ```
 
 ### `xai-exp phase0` — assets
@@ -178,6 +179,7 @@ code/
 │   ├── protocols/         # Machine-readable dataset/training protocols
 │   ├── pilots/            # Small experiments with explicit pass criteria
 │   └── simple/            # One versioned YAML per published experiment
+├── pilots/                # What each pilot fixes and how to run it
 ├── scripts/               # setup, audits, examples, and result-to-LaTeX export
 ├── src/xai_ensemble/
 │   ├── core/              # Hashing, atomic I/O, paths, manifests, provenance
@@ -185,6 +187,7 @@ code/
 │   ├── phase0/            # Model registry, training, checkpoints, statistics
 │   ├── phase1/            # Explainer registry, ViT RelProp bridge, compatibility gate
 │   ├── phase2/            # Mask-game evaluator, metrics, GPU aggregation, bootstrap
+│   ├── pilots/            # Pre-experiment sweep producers and adjudicators
 │   └── simple/            # Two-stage pipeline and all sub-experiments
 ├── tests/                 # Unit tests and optional CUDA integration tests
 └── vendor/                # Pinned Transformer-Explainability snapshot (MIT)

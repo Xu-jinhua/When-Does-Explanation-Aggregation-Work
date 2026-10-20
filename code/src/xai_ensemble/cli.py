@@ -90,6 +90,12 @@ def build_parser() -> argparse.ArgumentParser:
                 "install the gpu extra: pip install -e '.[gpu]'",
                 file=sys.stderr,
             )
+    _register_group(
+        root,
+        "pilot",
+        "Run pre-experiment pilots and adjudicate their results",
+        importlib.import_module("xai_ensemble.pilots.cli").register_subcommands,
+    )
     return parser
 
 

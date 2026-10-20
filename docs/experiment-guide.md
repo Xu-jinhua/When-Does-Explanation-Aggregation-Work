@@ -45,6 +45,11 @@ zero model-input baseline; DeepLift uses the normalized train-image mean;
 GradientShap uses 20 samples; GradientShap and DeepLiftShap use the same fixed
 three-member zero/Gaussian/train-mean distribution. The Gaussian is one
 seeded `N(0,1)` tensor in model-input space and is independent of batch size.
+These fixed values are the pre-experiment pilot selections documented in
+[`code/pilots`](../pilots/README.md), where `xai-exp pilot ig-step-budget`
+swept the IG approximation depth per dataset-model pair and `xai-exp pilot
+baseline-selection` compared the reference candidates of every
+baseline-dependent method, both by validation Fidelity.
 
 ## Artifacts
 

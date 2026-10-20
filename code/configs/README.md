@@ -12,8 +12,9 @@ pipelines.  Run all commands from the repository's `code/` directory with
   manifest and train-image mean used by `quickstart.yaml`.
 - `protocols/` — core evaluation-semantics protocol (`core.yaml`) and the
   candidate-grid overlay (`full-matrix.yaml`) for the matrix runner.
-- `pilots/` — pilot cost/calibration specifications (e.g. the NOISE
-  goodness-of-fit bootstrap budget).
+- `pilots/` — pilot cost/calibration specifications: the NOISE goodness-of-fit
+  bootstrap budget, the Kemeny solver grid, the Integrated Gradients step
+  sweep, and the baseline-reference selection.
 
 ## Which file reproduces which part of the paper
 

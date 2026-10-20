@@ -1,0 +1,15 @@
+name: kemeny_solver
+description: Lock a real Kendall-objective heuristic budget and verify it against small exact cases.
+patch_counts: [16, 64, 196, 256]
+ballot_counts: [4, 8, 10, 13, 16]
+starts: [1, 4, 8, 16]
+neighborhoods:
+  - adjacent
+  - insertion
+time_limits_seconds: [1, 5, 15, 30]
+synthetic_instances_per_cell: 20
+pass:
+  exact_optimum_rate_n16_min: 0.95
+  objective_never_worse_than_borda: true
+  deterministic_seed: true
+selection: fastest_configuration_meeting_quality

@@ -1,0 +1,17 @@
+name: ig_step_budget
+description: Sweep the Integrated Gradients approximation depth per dataset-model pair and lock the value with the highest validation Fidelity.
+method: IntegratedGradients
+split: validation
+# Paper sweep range: 50 to 200 in increments of 25.
+step_candidates: [50, 75, 100, 125, 150, 175, 200]
+patch_size: 16
+top_k: 20
+fill: dataset_mean
+sample_count: 128
+attribution_batch_size: 16
+evaluation_batch_size: 64
+seed: 20260714
+pass:
+  minimum_sample_count: 32
+  minimum_step_candidates: 3
+selection: highest_validation_fidelity_smallest_steps_on_ties

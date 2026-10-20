@@ -1,0 +1,20 @@
+name: baseline_selection
+description: Select the reference baseline of each baseline-dependent Captum method by validation Fidelity.
+split: validation
+methods: [DeepLift, FeatureAblation, Occlusion, GradientShap, DeepLiftShap]
+# Scalar and tensor references in model-input space; dataset_mean and
+# class_mean are the normalized raw train-split artifacts.  SHAP-style
+# methods sample from a distribution with this many members.
+reference_candidates: [zero, dataset_mean, class_mean, gaussian_noise, uniform_noise]
+shap_distribution_members: 20
+shap_n_samples: 20
+patch_size: 16
+top_k: 20
+fill: dataset_mean
+sample_count: 128
+attribution_batch_size: 16
+evaluation_batch_size: 64
+seed: 20260714
+pass:
+  minimum_sample_count: 32
+selection: highest_validation_fidelity_configured_order_on_ties
