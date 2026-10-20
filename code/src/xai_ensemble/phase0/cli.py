@@ -21,7 +21,7 @@ from xai_ensemble.data.partitions import (
     read_partition_plan,
     write_partition_plan,
 )
-from xai_ensemble.data.specs import IMAGENET1K, get_dataset_spec
+from xai_ensemble.data.specs import IMAGENET100, get_dataset_spec
 from xai_ensemble.phase0.checkpoint import (
     CheckpointManager,
     make_checkpoint_metadata,
@@ -658,7 +658,7 @@ def register_subcommands(subparsers: Any) -> None:
     """Register Phase 0 commands on an existing argparse subparser action."""
 
     manifest = subparsers.add_parser("build-manifest", help="scan a pinned HF dataset")
-    manifest.add_argument("--dataset", default=IMAGENET1K.key)
+    manifest.add_argument("--dataset", default=IMAGENET100.key)
     manifest.add_argument("--output", required=True)
     manifest.add_argument("--cache-dir")
     manifest.add_argument("--streaming", action="store_true")
@@ -687,7 +687,7 @@ def register_subcommands(subparsers: Any) -> None:
     partitions.set_defaults(handler=_build_partitions, _handler=_build_partitions)
 
     train = subparsers.add_parser("train", help="train or resume one source/reference model")
-    train.add_argument("--dataset", default=IMAGENET1K.key)
+    train.add_argument("--dataset", default=IMAGENET100.key)
     train.add_argument("--manifest", required=True)
     train.add_argument("--train-partition", required=True)
     train.add_argument("--validation-partition")
@@ -741,7 +741,7 @@ def register_subcommands(subparsers: Any) -> None:
         "compute-means",
         help="compute immutable pixelwise train-split dataset/class mean images",
     )
-    means.add_argument("--dataset", default=IMAGENET1K.key)
+    means.add_argument("--dataset", default=IMAGENET100.key)
     means.add_argument("--manifest", required=True)
     means.add_argument("--model", required=True)
     means.add_argument("--split", default="train")

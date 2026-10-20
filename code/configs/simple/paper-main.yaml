@@ -27,14 +27,13 @@ runtime:
   max_retries: 1
 
 datasets:
-  - id: imagenet1k
-    registry_key: imagenet1k
+  - id: imagenet100
+    registry_key: imagenet100
     # Placeholder: generate with `xai-exp phase0 build-manifest` (see docs/).
-    manifest_path: /path/to/imagenet1k.manifest.json
+    manifest_path: /path/to/imagenet100.manifest.json
     splits: [test]
     # Provider download cache, e.g. ${HF_HOME} or ~/.cache/huggingface.
-    # Official torchvision ImageNet root; XAI_IMAGENET1K_ROOT overrides this.
-    cache_directory: /path/to/ilsvrc2012
+    cache_directory: ~/.cache/huggingface
     keep_provider_in_memory: false
     cache_images_in_ram: false
 
@@ -49,28 +48,28 @@ datasets:
     cache_images_in_ram: false
 
 models:
-  - id: imagenet1k-resnet18
-    dataset: imagenet1k
+  - id: imagenet100-resnet18
+    dataset: imagenet100
     model_key: resnet18
     architecture: cnn
-    num_classes: 1000
+    num_classes: 100
     init_mode: checkpoint
     # Placeholder: train with `xai-exp phase0 train` (see docs/).
-    checkpoint_path: /path/to/imagenet1k/resnet18/checkpoints/inference.pt
+    checkpoint_path: /path/to/imagenet100/resnet18/checkpoints/inference.pt
     strict_checkpoint: true
     # Placeholder: generate with `xai-exp phase0 compute-means` (see docs/).
-    mean_path: /path/to/imagenet1k/resnet18/train-image-mean
+    mean_path: /path/to/imagenet100/resnet18/train-image-mean
     mean_key: dataset_mean
 
-  - id: imagenet1k-vit-b16
-    dataset: imagenet1k
+  - id: imagenet100-vit-b16
+    dataset: imagenet100
     model_key: vit_base_patch16_224
     architecture: vit
-    num_classes: 1000
+    num_classes: 100
     init_mode: checkpoint
-    checkpoint_path: /path/to/imagenet1k/vit-b16/checkpoints/inference.pt
+    checkpoint_path: /path/to/imagenet100/vit-b16/checkpoints/inference.pt
     strict_checkpoint: true
-    mean_path: /path/to/imagenet1k/vit-b16/train-image-mean
+    mean_path: /path/to/imagenet100/vit-b16/train-image-mean
     mean_key: dataset_mean
 
   - id: dermamnist-resnet18

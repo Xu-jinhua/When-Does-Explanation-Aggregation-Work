@@ -48,7 +48,6 @@ METHOD_LABELS = {
 }
 DATASET_LABELS = {
     "imagenet100": "ImageNet100",
-    "imagenet1k": "ImageNet-1K",
     "dermamnist": "DermaMNIST",
     "pathmnist": "PathMNIST",
 }

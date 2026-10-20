@@ -9,7 +9,7 @@ protocol: ../protocols/full-matrix.yaml
 methods_file: methods.yaml
 
 datasets:
-  - imagenet1k
+  - imagenet100
   - food101
   - places365
   - pathmnist

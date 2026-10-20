@@ -9,7 +9,7 @@ from xai_ensemble.phase0.models import ModelDefinition, get_model_definition
 from xai_ensemble.simple.methods import MethodCatalog
 
 DATASET_IDS = (
-    "imagenet1k",
+    "imagenet100",
     "food101",
     "places365",
     "pathmnist",

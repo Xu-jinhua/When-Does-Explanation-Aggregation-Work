@@ -34,8 +34,8 @@ runtime:
     Occlusion: 12
 
 scope:
-  dataset: imagenet1k
-  model: imagenet1k-resnet18
+  dataset: imagenet100
+  model: imagenet100-resnet18
   split: test
   ensemble: all-paper-methods
   patch_size: 16

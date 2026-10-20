@@ -64,7 +64,7 @@ methods:
     architectures: [cnn, vit]
     profile_start: 16
     params:
-      n_samples: 40
+      n_samples: 20
       baseline_distribution: combined_zero_gaussian_mean
       gaussian_space: model_input
 

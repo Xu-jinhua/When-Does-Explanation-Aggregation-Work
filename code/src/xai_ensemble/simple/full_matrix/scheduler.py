@@ -1294,7 +1294,7 @@ def _worker_environment(experiment: FullMatrixExperiment) -> Mapping[str, str]:
                 FULL_MATRIX_LOGICAL_CACHE_ROOT_ENV: str(experiment.storage.cache_root),
                 FULL_MATRIX_OVERLAY_DATASETS_ENV: os.environ.get(
                     FULL_MATRIX_OVERLAY_DATASETS_ENV,
-                    "bloodmnist,breastmnist,dermamnist,food101,imagenet1k,octmnist,"
+                    "bloodmnist,breastmnist,dermamnist,food101,imagenet100,octmnist,"
                     "organamnist,organcmnist,organsmnist,pathmnist,pneumoniamnist,"
                     "retinamnist,tissuemnist",
                 ),

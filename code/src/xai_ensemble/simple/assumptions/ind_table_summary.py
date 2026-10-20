@@ -64,7 +64,6 @@ PAPER_RULE_LABELS = {
 }
 PAPER_DATASET_LABELS = {
     "imagenet100": "ImageNet100",
-    "imagenet1k": "ImageNet-1K",
     "dermamnist": "DermaMNIST",
     "pathmnist": "PathMNIST",
     "octmnist": "OCTMNIST",
@@ -78,8 +77,6 @@ PAPER_DATASET_LABELS = {
     "organsmnist": "OrganSMNIST",
 }
 PAPER_MODEL_LABELS = {
-    "imagenet1k-resnet18": "ResNet-18",
-    "imagenet1k-vit-b16": "ViT-B/16",
     "imagenet100-resnet18": "ResNet-18",
     "imagenet100-vit-b16": "ViT-B/16",
     "dermamnist-resnet18": "ResNet-18",

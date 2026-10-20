@@ -7,19 +7,18 @@ run:
   cache_root: ${XAI_CACHE_ROOT:-./cache}
 
 datasets:
-  imagenet1k:
-    provider: imagenet
-    registry_key: imagenet1k
-    revision: ilsvrc2012-train-val-hash-holdout-50-per-class-v1
-    root_environment: XAI_IMAGENET1K_ROOT
+  imagenet100:
+    provider: huggingface
+    repo_id: ilee0022/ImageNet100
+    revision: c55b2f2967c034db17be30f7d430e41c80fd4281
     train_split: train
     validation_split: validation
     test_split: test
     expected_counts:
-      train: 1231167
-      validation: 50000
-      test: 50000
-    expected_classes: 1000
+      train: 117000
+      validation: 13000
+      test: 5000
+    expected_classes: 100
     image_size: 224
     pin_content_hashes: true
   dermamnist:
@@ -42,7 +41,7 @@ models:
       implementation: timm
       architecture: vit_base_patch16_224
   standard_init:
-    imagenet1k: imagenet1k_pretrained
+    imagenet100: imagenet1k_pretrained
     dermamnist: imagenet1k_pretrained
   ind_init: random
   overlap_init: random

@@ -19,7 +19,6 @@ FULL_MATRIX_OVERLAY_DATASETS = frozenset(
         "dermamnist",
         "food101",
         "imagenet100",
-        "imagenet1k",
         "octmnist",
         "organamnist",
         "organcmnist",
