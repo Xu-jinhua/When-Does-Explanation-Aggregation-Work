@@ -15,10 +15,9 @@ image explanations derived from patch-based saliency maps. We first rank image
 patches according to their estimated importance and then combine these rankings
 using different rank-aggregation strategies. Through experiments on multiple
 datasets, model architectures, post-hoc explanation methods, and
-rank-aggregation strategies, we show that the effectiveness of aggregation
-methods depends on how well two assumptions are met: independence among the
-aggregated explanations and compatibility of the explanation noise with a
-distance-based rank-noise model.
+rank-aggregation strategies, our post-hoc analysis shows that the
+effectiveness of aggregation methods depends on how well the noise affecting
+them follows a distance-based rank-noise model.
 
 ## Results
 
@@ -28,12 +27,12 @@ the compiled PDF and its LaTeX source are published together.
 
 | Dataset | PDF report | LaTeX source |
 |:--|:--|:--|
-| ImageNet | [PDF](results/pdf/by-dataset/imagenet.pdf) | [source](results/latex/by-dataset/imagenet/) |
+| ImageNet100 | [PDF](results/pdf/by-dataset/imagenet.pdf) | [source](results/latex/by-dataset/imagenet/) |
 | DermaMNIST | [PDF](results/pdf/by-dataset/dermamnist.pdf) | [source](results/latex/by-dataset/dermamnist/) |
 | PathMNIST | [PDF](results/pdf/by-dataset/pathmnist.pdf) | [source](results/latex/by-dataset/pathmnist/) |
 | BloodMNIST | [PDF](results/pdf/by-dataset/bloodmnist.pdf) | [source](results/latex/by-dataset/bloodmnist/) |
 | BreastMNIST | [PDF](results/pdf/by-dataset/breastmnist.pdf) | [source](results/latex/by-dataset/breastmnist/) |
-| Food101 | [PDF](results/pdf/by-dataset/food101.pdf) | [source](results/latex/by-dataset/food101/) |
+| Food-101 | [PDF](results/pdf/by-dataset/food101.pdf) | [source](results/latex/by-dataset/food101/) |
 | OCTMNIST | [PDF](results/pdf/by-dataset/octmnist.pdf) | [source](results/latex/by-dataset/octmnist/) |
 | OrganAMNIST | [PDF](results/pdf/by-dataset/organamnist.pdf) | [source](results/latex/by-dataset/organamnist/) |
 | OrganCMNIST | [PDF](results/pdf/by-dataset/organcmnist.pdf) | [source](results/latex/by-dataset/organcmnist/) |
@@ -51,12 +50,12 @@ The code is organized around the following stages:
 
 ### Datasets
 
-The experiments use ImageNet, MedMNIST, Food-101, and Places365. The official
+The experiments use ImageNet100, MedMNIST, Food-101, and Places365. The official
 dataset pages are provided below for data access and download.
 
 | Dataset | Official page |
 |:--|:--|
-| ImageNet | [image-net.org](https://www.image-net.org/) |
+| ImageNet100 | [image-net.org](https://www.image-net.org/) |
 | MedMNIST | [medmnist.com](https://medmnist.com/) |
 | Food-101 | [ETH Zurich dataset page](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) |
 | Places365 | [MIT Places365](http://places2.csail.mit.edu/) |
@@ -77,6 +76,8 @@ The collection uses the following image classification architectures:
 | EfficientNet-B0 | [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946) |
 | MobileNetV3-Large | [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244) |
 | ViT-B/16 | [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/abs/2010.11929) |
+| DeiT-B/16 | [Training Data-Efficient Image Transformers & Distillation through Attention](https://arxiv.org/abs/2012.12877) |
+| Swin-B | [Swin Transformer: Hierarchical Vision Transformer using Shifted Windows](https://arxiv.org/abs/2103.14030) |
 
 ### Explanation Methods
 
