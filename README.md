@@ -150,5 +150,4 @@ Source: [`code/src/xai_ensemble/phase2/`](code/src/xai_ensemble/phase2/)
 ```
 
 The documentation index is available in [`docs/README.md`](docs/README.md),
-with guides to the experiment pipeline, full-matrix analysis, and NOISE
-generalization.
+with the full-matrix analysis and NOISE generalization notes.

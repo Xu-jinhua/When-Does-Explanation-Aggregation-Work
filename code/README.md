@@ -145,9 +145,6 @@ the unmasked prediction. Per-sample sufficient statistics (every rank, every
 removed/retained prediction) are preserved in the Phase 2 shards, so tables,
 bootstraps, and stratified post-processing never need another model forward.
 
-See [`../docs/experiment-guide.md`](../docs/experiment-guide.md) for the full
-scientific contract, metric definitions, and per-experiment command chains.
-
 ## Storage: local mode and rclone remotes
 
 `storage.remote_root` selects the artifact backend. If its first path segment

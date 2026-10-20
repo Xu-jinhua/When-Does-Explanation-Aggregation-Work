@@ -169,8 +169,7 @@ with `CUDA_VISIBLE_DEVICES=""`, are capped by `max_cpu_jobs`, and reserve no
 GPU. A bounded tmpfs area holds scratch; immutable artifacts, reference
 checkpoints, and the large provider dataset cache live in the configured
 artifact storage rather than the constrained local disk. Local filesystem mode
-and rclone remotes are both supported; see
-[`experiment-guide.md`](experiment-guide.md#storage-configuration).
+and rclone remotes are both supported.
 
 ## Commands
 
