@@ -205,8 +205,16 @@ class AblationExperiment:
     def __post_init__(self) -> None:
         if self.patch_size != 16:
             raise ValueError("The accepted ablation protocol is fixed to p=16")
-        if self.top_k_values != (10, 20, 40, 80):
-            raise ValueError("Table 2 must use k=(10,20,40,80)")
+        patch_grid = (224 // self.patch_size) ** 2
+        if (
+            tuple(sorted(set(self.top_k_values))) != self.top_k_values
+            or any(k < 1 or k > patch_grid for k in self.top_k_values)
+            or 20 not in self.top_k_values
+        ):
+            raise ValueError(
+                "Table 2 top-k values must be sorted unique integers within the "
+                "patch grid and contain the primary k=20"
+            )
         if self.fill_values != ("dataset_mean", "class_mean"):
             raise ValueError("Table 4 must compare dataset_mean and class_mean")
         model = self.base.model(self.model_id)
